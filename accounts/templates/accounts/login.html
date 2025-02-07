@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <section class="flat-spacing-10">
+        <div class="container">
+            <div class="tf-grid-layout lg-col-2 tf-login-wrap">
+                <div class="tf-login-form">
+                    <div id="recover">
+                        <h5 class="mb_24">Réinitialiser votre mot de passe</h5>
+                        <p class="mb_30">Nous vous enverrons un e-mail pour réinitialiser votre mot de passe.</p>
+                        <div>
+                            <form class="" id="login-form" action="#" method="post" accept-charset="utf-8" data-mailchimp="true">
+                                <div class="tf-field style-1 mb_15">
+                                    <input class="tf-field-input tf-input" placeholder="" type="email" id="property3" name="email">
+                                    <label class="tf-field-label fw-4 text_black-2" for="property3">Email *</label>
+                                </div>
+                                <div class="mb_20">
+                                    <a href="#login" class="tf-btn btn-line">Annuler</a>
+                                </div>
+                                <div class="">
+                                    <button type="submit" class="tf-btn w-100 radius-3 btn-fill animate-hover-btn justify-content-center">Réinitialisation du mot de passe</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div id="login">
+                        <h5 class="mb_36">Connexion</h5>
+                        <div>
+                            <form method="POST">
+                                {% csrf_token %}
+                                {% for field in form.visible_fields %}    
+                                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                                    <div class="tf-field style-1 {% if forloop.last %}mb_30{% else %}mb_15{% endif %}">
+                                        {{ field }}
+                                        <label class="tf-field-label fw-4 text_black-2" for="{{field.id_for_label}}">{{ field.label }}</label>
+                                    </div>
+                                    {% for error in field.errors %}
+                                        <div class="invalid-feedback">{{ error }}</div>
+                                    {% endfor %}
+                                {% endfor %}
+                                <div class="mb_20">
+                                    <a href="#recover" class="tf-btn btn-line">Mot de passe oublié ?</a>
+                                </div>
+                                <div class="">
+                                    <button type="submit" class="tf-btn w-100 radius-3 btn-fill animate-hover-btn justify-content-center">Connexion</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="tf-login-content">
+                    <h5 class="mb_36">Je n'ai pas encore de compte</h5>
+                    <p class="mb_20">Inscrivez-vous pour bénéficier d'un accès anticipé aux soldes, ainsi que des nouveaux arrivages, des tendances et des promotions. Pour vous désinscrire, cliquez sur le bouton « se désinscrire » dans nos courriels</p>
+                    <a href="register.html" class="tf-btn btn-line">S'incrire<i class="icon icon-arrow1-top-left"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock content %}

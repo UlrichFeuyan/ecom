@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block content %}
+    {% comment %} <div style="height: 300px;">
+        
+    </div> {% endcomment %}
+
+    <!-- Section Product -->
+    <section class="flat-spacing-2">
+        <div class="container">
+            <div class="tf-shop-control grid-3 align-items-center">
+                <div class="tf-control-filter">
+                    <a href="#filterShop" data-bs-toggle="offcanvas" aria-controls="offcanvasLeft" class="tf-btn-filter"><span class="icon icon-filter"></span><span class="text">Filter</span></a>
+                </div>
+                <ul class="tf-control-layout d-flex justify-content-center">
+                    <li class="tf-view-layout-switch sw-layout-2" data-value-grid="grid-2">
+                        <div class="item"><span class="icon icon-grid-2"></span></div>
+                    </li>
+                    <li class="tf-view-layout-switch sw-layout-3" data-value-grid="grid-3">
+                        <div class="item"><span class="icon icon-grid-3"></span></div>
+                    </li>
+                    <li class="tf-view-layout-switch sw-layout-4" data-value-grid="grid-4">
+                        <div class="item"><span class="icon icon-grid-4"></span></div>
+                    </li>
+                    <li class="tf-view-layout-switch sw-layout-5" data-value-grid="grid-5">
+                        <div class="item"><span class="icon icon-grid-5"></span></div>
+                    </li>
+                    <li class="tf-view-layout-switch sw-layout-6 active" data-value-grid="grid-6">
+                        <div class="item"><span class="icon icon-grid-6"></span></div>
+                    </li>
+                </ul>
+                <div class="tf-control-sorting d-flex justify-content-end">
+                    <div class="tf-dropdown-sort" data-bs-toggle="dropdown">
+                        <div class="btn-select">
+                            <span class="text-sort-value">Featured</span>
+                            <span class="icon icon-arrow-down"></span>
+                        </div>
+                        <div class="dropdown-menu">
+                            <div class="select-item active">
+                                <span class="text-value-item">Featured</span>
+                            </div>
+                            <div class="select-item">
+                                <span class="text-value-item">Best selling</span>
+                            </div>
+                            <div class="select-item">
+                                <span class="text-value-item">Alphabetically, A-Z</span>
+                            </div>
+                            <div class="select-item">
+                                <span class="text-value-item">Alphabetically, Z-A</span>
+                            </div>
+                            <div class="select-item">
+                                <span class="text-value-item">Price, low to high</span>
+                            </div>
+                            <div class="select-item">
+                                <span class="text-value-item">Price, high to low</span>
+                            </div>
+                            <div class="select-item">
+                                <span class="text-value-item">Date, old to new</span>
+                            </div>
+                            <div class="select-item">
+                                <span class="text-value-item">Date, new to old</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="wrapper-control-shop">
+                <div class="meta-filter-shop"></div>
+                <div class="grid-layout wrapper-shop" data-grid="grid-4">
+                    <!-- card product 6 -->
+                    {% for product in page %}
+                        <div class="card-product" data-price="10.00" data-color="light-green black blue dark-blue white light-grey">
+                            <div class="card-product-wrapper">
+                                <a href="{% url 'store:detail' product.slug %}" class="product-img">
+                                    <img class="lazyload img-product" data-src="{{ product.get_first_image.thumbnail.url }}" src="{{ product.get_first_image.thumbnail.url }}" alt="image-product">
+                                    <img class="lazyload img-hover" data-src="{{ product.get_second_image.thumbnail.url }}" src="{{ product.get_second_image.thumbnail.url }}" alt="image-product">
+                                </a>
+                                <div class="list-product-btn absolute-2">
+                                    <a href="#quick_add" data-bs-toggle="modal" class="box-icon bg_white quick-add tf-btn-loading">
+                                        <span class="icon icon-bag"></span>
+                                        <span class="tooltip">Quick Add</span>
+                                    </a>
+                                    <a href="javascript:void(0);" class="box-icon bg_white wishlist btn-icon-action">
+                                        <span class="icon icon-heart"></span>
+                                        <span class="tooltip">Add to Wishlist</span>
+                                        <span class="icon icon-delete"></span>
+                                    </a>
+                                    <a href="#compare" data-bs-toggle="offcanvas" aria-controls="offcanvasLeft" class="box-icon bg_white compare btn-icon-action">
+                                        <span class="icon icon-compare"></span>
+                                        <span class="tooltip">Add to Compare</span>
+                                        <span class="icon icon-check"></span>
+                                    </a>
+                                    <a href="#quick_view" data-bs-toggle="modal" class="box-icon bg_white quickview tf-btn-loading">
+                                        <span class="icon icon-view"></span>
+                                        <span class="tooltip">Quick View</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="card-product-info">
+                                <a href="{% url 'store:detail' product.slug %}" class="title link">{{ product.name }}</a>
+                                <span class="price">{{ product.price }} Fcfa</span>
+                                <ul class="list-color-product">
+                                    {% if product.get_all_images.count > 1 %}
+                                        {% for image in product.get_all_images %}
+                                            <li class="list-color-item color-swatch {% if forloop.first %}active{% endif %}">
+                                                <span class="tooltip">Light Green</span>
+                                                <span class="swatch-value bg_{{ image.id }}"></span>
+                                                <img class="lazyload" data-src="{{ image.thumbnail.url }}" src="{{ image.thumbnail.url }}" alt="image-product">
+                                            </li>
+                                        {% endfor %}
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <!-- pagination -->
+                <ul class="tf-pagination-wrap tf-pagination-list tf-pagination-btn">
+                    <li class="active">
+                        <a href="#" class="pagination-link">1</a>
+                    </li>
+                    <li>
+                        <a href="#" class="pagination-link animate-hover-btn">2</a>
+                    </li>
+                    <li>
+                        <a href="#" class="pagination-link animate-hover-btn">3</a>
+                    </li>
+                    <li>
+                        <a href="#" class="pagination-link animate-hover-btn">4</a>
+                    </li>
+                    <li>
+                        <a href="#" class="pagination-link animate-hover-btn">
+                            <span class="icon icon-arrow-right"></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+        </div>
+    </section>
+    <!-- /Section Product -->
+{% endblock content %}

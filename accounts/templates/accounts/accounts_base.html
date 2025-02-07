@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <!-- page-cart -->
+    <section class="flat-spacing-11">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="wrap-sidebar-account">
+                        <ul class="my-account-nav">
+                            <li>
+                                <a href="{% url 'accounts:profil' %}" class="my-account-nav-item {% if profile_active %}active{% endif %}">Profile</a>
+                            </li>
+                            <li>
+                                <a href="#" class="my-account-nav-item {% if commandes_active %}active{% endif %}">Commandes</a>
+                            </li>
+                            <li>
+                                <a href="#" class="my-account-nav-item {% if adresses_active %}active{% endif %}">Addresses</a>
+                            </li>
+                            <!-- <li>
+                                <a href="my-account-wishlist.html" class="my-account-nav-item">Souhaits</a>
+                            </li> -->
+                            <li>
+                                <a href="{% url 'accounts:logout' %}" class="my-account-nav-item">Déconnexion</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-9">
+                    <div class="my-account-content account-edit">
+                        <div class="">
+                            
+                            {% block accounts_base_content %}
+                                
+                            {% endblock accounts_base_content %}
+                                
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- page-cart -->
+{% endblock content %}

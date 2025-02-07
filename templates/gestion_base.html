@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <!-- page-cart -->
+    <section class="flat-spacing-11">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="wrap-sidebar-account">
+                        <ul class="my-account-nav">
+                            <li>
+                                <a href="#" class="my-account-nav-item {% if tableau_de_bord_active %}active{% endif %}">Tableau de bord</a>
+                            </li>
+                            <li>
+                                <a href="#" class="my-account-nav-item {% if produits_active %}active{% endif %}">Produits</a>
+                            </li>
+                            <li>
+                                <a href="#" class="my-account-nav-item {% if categories_active %}active{% endif %}">catégories</a>
+                            </li>
+                            <li>
+                                <a href="#" class="my-account-nav-item {% if clients_active %}active{% endif %}">Clients</a>
+                            </li>
+                            <li>
+                                <a href="#" class="my-account-nav-item {% if fournisseurs_active %}active{% endif %}">Fournisseurs</a>
+                            </li>
+                            <li>
+                                <a href="#" class="my-account-nav-item {% if commandes_active %}active{% endif %}">commandes</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-9">
+                    <div class="my-account-content account-edit">
+                        <div class="">
+                            
+                            {% block accounts_base_content %}
+                                
+                            {% endblock accounts_base_content %}
+                                
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- page-cart -->
+{% endblock content %}

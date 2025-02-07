@@ -1,0 +1,25 @@
+{% extends 'accounts/accounts_base.html' %}
+{% load static %}
+
+{% block accounts_base_content %}
+
+    <form method="POST">
+        {% csrf_token %}
+        {% for field in form.visible_fields %}    
+            <small class="form-text text-muted">{{ field.help_text }}</small>
+            <div class="tf-field style-1 mb_15">
+                {{ field }}
+                <label class="tf-field-label fw-4 text_black-2" for="{{field.id_for_label}}">{{ field.label }}</label>
+            </div>
+            {% for error in field.errors %}
+                <div class="invalid-feedback mb_30">{{ error     }}</div>
+            {% endfor %}
+        {% endfor %}
+        <div class="mb_20 mt_20">
+            <button type="submit" class="tf-btn w-100 radius-3 btn-fill animate-hover-btn justify-content-center">
+                Mettre à jour
+            </button>
+        </div>
+    </form>
+
+{% endblock accounts_base_content %}

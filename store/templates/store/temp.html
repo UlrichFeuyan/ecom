@@ -1,0 +1,117 @@
+        <header class="vs-header header-layout8">
+            <div class="menu-top p-0 mb-4">
+                <div class="container">
+                    <div class="menu-top">
+                        <div class="row align-items-center justify-content-center justify-content-md-between gx-80">
+                            <div class="col-auto">
+                                <div class="row gx-50">
+                                    <div class="col-auto">
+                                        <div class="header-info">
+                                            <div class="header-info_icon"><a href="tel:+1234567890"><img src="{% static 'assets/img/icon/call-icon.png' %}" alt="icon"></a></div>
+                                            <div class="media-body">
+                                                <div class="header-info_link  text-white"><a href="tel:+1234567890" class="text-inherit">+123 456789 0</a></div><span class="header-info_label">Contactez nous</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="header-info">
+                                            <div class="header-info_icon"><img src="{% static 'assets/img/icon/mail-icon.png' %}" alt="icon"></div>
+                                            <div class="media-body">
+                                                <div class="header-info_link text-white">Livraison gratuite</div><span class="header-info_label">au delas de 200 000 Fcfa</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% include 'store/search_form.html' %}
+
+                        </div>
+                    </div>
+                </div>
+                <div class="menu-top sticky-wrapper">
+                    <div class="sticky-active">
+                        <div class="container">
+                            <div class="row justify-content-between align-items-center">
+                                <div class="col-4 col-sm-auto">
+                                    <div class="header-logo py-4 py-lg-0"><a href="{% url 'store:index' %}"><img src="{% static 'assets/img/logo-white.png' %}" alt="Vendora"></a></div>
+                                </div>
+                                <div class="col-auto ms-md-auto ms-lg-0">
+                                    <nav class="main-menu menu-style6 d-none d-lg-block">
+                                        <ul>
+                                            <li><a href="{% url 'store:index' %}">Accueil</a></li>
+                                            <li><a href="{% url 'store:index' %}">Boutique</a></li>
+                                            <li><a href="{% url 'contact' %}">Contact</a></li>
+                                            <li><a href="{% url 'faq' %}">FAQ</a></li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="header-buttons text-white">
+                                        {% if user.is_authenticated %}
+                                            <div class="header-cart">
+                                                <a href="#" class="has-badge"><i class="fal fa-user"></i>
+                                                    <span class="badge" style="display:inline-block;">{{ user.username|first|upper }}</span>
+                                                </a>
+                                                <div class="toggle_menu" style="display: none;">
+                                                    <div class="sous_menu">
+                                                        <p class="buttons"><a href="{% url 'store:cart' %}" class="vs-btn">compte</a> <a href="#" class="vs-btn checkout">Déconnexion</a></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% else %}
+                                            <a href="{% url 'login' %}"><button class="vs-btn style2" style="height: 15px; border-radius: 5px; padding-top: 15px; padding-bottom: 26px; margin: 10px;"> Connexion</button></a>
+                                        {% endif %}
+                                        <script>
+                                            function menuDeroulant(id)
+                                            {
+                                                var element = document.getElementById(id);
+                                                var etat = element.style.display;
+
+                                                if (etat == none)
+                                                    element.style.display = 'block';
+                                                else
+                                                    element.style.display = 'none';
+                                            }
+                                            var hasBadge = document.querySelector(".has-badge");
+                                            var toggleMenu = document.querySelector(".toggle_menu");
+
+                                            hasBadge.addEventListener('click', menuDeroulant(toggleMenu),false);
+                                        </script>
+                                        <div class="header-cart">
+                                            <a href="{% url 'store:cart' %}" class="has-badge"><i class="fal fa-shopping-bag"></i><span class="badge">{% if user.is_authenticated and user.cart.orders.count > 0 %} {{ user.cart.orders.count }} {% else %} 0 {% endif %}</span></a>
+                                            <div class="toggle_menu" style="display: none;">
+                                                <div class="">
+                                                    <p class="buttons"><a href="{% url 'store:cart' %}" class="vs-btn">panier</a> <a href="#" class="vs-btn checkout">Valider l'achat</a></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-auto d-block d-lg-none"><button class="vs-menu-toggle d-inline-block d-lg-none"><i class="fal fa-bars"></i></button></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+
+
+
+
+<script>
+    function menuDeroulant(id)
+    {
+        var element = document.getElementById(id);
+        var etat = element.style.display;
+
+        if (etat == none)
+            element.style.display = 'block';
+        else
+            element.style.display = 'none';
+    }
+    var hasBadge = document.querySelector(".has-badge");
+    var toggleMenu = document.querySelector(".toggle_menu");
+
+    hasBadge.addEventListener('click', menuDeroulant(toggleMenu),false);
+</script>

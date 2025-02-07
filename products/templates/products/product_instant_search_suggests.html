@@ -1,0 +1,21 @@
+<ul>    
+    {% for product in products %}
+        <li>
+            <a class="search-result-item" href="{% url 'products:detail' product.slug %}">
+                <div class="img-box">
+                    <img src="{{ product.get_first_image.thumbnail.url }}" alt="">
+                </div>
+                <div class="box-content">
+                    <p class="title link">{{ product.name }}</p>
+                    <div class="price">{{ product.price }} Fcfa</div>
+                </div>
+            </a>
+        </li>
+    {% empty %}
+        {% if no_result %}
+            <p>
+                {{ no_result }}
+            </p>
+        {% endif %}
+    {% endfor %}
+</ul>

@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <section class="vs-product-wrapper product-details space-top">
+        <div class="container mb-5 pb-2">
+            <div class="row gx-40">
+                <div class="col-lg-6">
+                    <div class="product-details-img product-img">
+                        <div class="product-big-slide">
+                            {% for image in product.get_all_images %}
+                                <div>
+                                    <div class="img"><img src="{{ image.thumbnail.url }}" alt="{{ product.name }}"/></div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="product-thumb-slide">
+                            {% if product.get_all_images.count > 1 %}
+                                {% for image in product.get_all_images %}
+                                    <div>
+                                        <div class="thumb"><img src="{{ image.thumbnail.url }}" width="100" height="100" alt="Product Thumb"></div>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="product-about">
+                      <p class="price">{{ product.price }} Fcfa</p>
+                        <h2 class="product-title"><a href="{% url 'store:store' %}">{{ product.name }}</a></h2>
+                        <div class="product-info-list">
+                            <ul>
+                                <li><i class="fal fa-redo-alt"></i>Remboursable pendant 7 Jours</li>
+                            </ul>
+                        </div>
+                        <div class="quantity style3"><label class="screen-reader-text">Quantité disponible : </label> <span>{{ product.stock }}</span></div>
+
+                        <div class="actions">
+                            <button data-product="{{ product.id }}" data-action="add" type="submit" class="vs-btn style2 update-cart">Ajouter au panier</button>
+                        </div>
+
+                        <div class="product-accordion accordion" id="productAccordion">
+                            <div class="accordion-item">
+                                <div class="accordion-header" id="accordionOne"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">Description du produit</button></div>
+                                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="accordionOne" data-bs-parent="#productAccordion">
+                                    <div class="accordion-body">
+                                        <div>{{ product.description|safe }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% if page %}
+    <div class="vs-pagination pt-20 pb-30">
+        <ul>
+            {% if page.has_previous %}
+                <li><a href="?page=1"> 1 </a></li>
+                <li><a href="?page={{ page.previous_page_number }}"><i class="far fa-chevron-left"></i></a></li>
+            {% endif %}
+
+            <li>Page <a href="#" class="active">{{ page.number }}</a>  sur {{ page.paginator.num_pages }}</li>
+
+            {% if page.has_next %}
+                <li><a href="?page={{ page.next_page_number }}"><i class="far fa-chevron-right"></i></a></li>
+                <li><a href="?page={{ page.paginator.num_pages }}"> fin </a></li>
+            {% endif %}
+        </ul>
+    </div>
+{% endif %}
