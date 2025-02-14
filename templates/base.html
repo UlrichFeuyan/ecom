@@ -22,7 +22,15 @@
     <!-- Favicon and Touch Icons  -->
     <link rel="shortcut icon" href="{% static 'images/logo/favicon.png' %}">
     <link rel="apple-touch-icon-precomposed" href="{% static 'images/logo/favicon.png' %}">
+
+    <!-- Datatables  -->
+    <link href="{% static 'lib/datatables/datatables.min.css' %}" rel="stylesheet">
+
     
+    {% block css_perso %}
+        
+    {% endblock css_perso %}
+        
 </head>
 
 <body class="preload-wrapper color-primary-8 color-main-text-2">
@@ -125,7 +133,12 @@
         </svg>
     </div>
     <!-- /gotop -->
+    
+    {% block modal_perso %}
+        
+    {% endblock modal_perso %}
 
+    
     <!-- sidebar account-->
     <div class="offcanvas offcanvas-start canvas-filter canvas-sidebar canvas-sidebar-account" id="mbAccount">
         <div class="canvas-wrapper">
@@ -2046,12 +2059,26 @@
     <script type="text/javascript" src="{% static 'js/wow.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/multiple-modal.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
-
+    
     {% comment %} plugins {% endcomment %}
     <script src="{% static 'js/sweetalert2/11.6.5/sweetalert2.all.min.js' %}"></script>
     <script src="{% static 'js/htmx.min.js' %} "></script>
     <script src="{% static 'js/dialog.js' %}"></script>
     <script src="{% static 'js/toast.js' %}"></script>
+    <!-- Datatables  -->
+    <script src="{% static 'lib/datatables/datatables.min.js' %}"></script>
+
+    {% block js_perso %}
+    
+        <script>
+            $(document).ready( function () {
+                $('#myTable').DataTable();
+            } );
+        </script>
+        
+    {% endblock js_perso %}
+        
+    
     {% load sweetify %}
     {% sweetify %}
 </body>

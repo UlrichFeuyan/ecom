@@ -1,18 +1,43 @@
-{% load static %}
+<!-- pagination -->
 {% if page %}
-    <div class="vs-pagination pt-20 pb-30">
-        <ul>
-            {% if page.has_previous %}
-                <li><a href="?page=1"> 1 </a></li>
-                <li><a href="?page={{ page.previous_page_number }}"><i class="far fa-chevron-left"></i></a></li>
-            {% endif %}
+    <ul class="tf-pagination-wrap tf-pagination-list tf-pagination-btn">
+        <!-- Lien vers la première page -->
+        {% if page.has_previous %}
+            <li>
+                <a href="?page=1" class="pagination-link animate-hover-btn">1</a>
+            </li>
+        {% endif %}
 
-            <li>Page <a href="#" class="active">{{ page.number }}</a>  sur {{ page.paginator.num_pages }}</li>
+        <!-- Lien vers la page précédente -->
+        {% if page.has_previous %}
+            <li>
+                <a href="?page={{ page.previous_page_number }}" class="pagination-link animate-hover-btn">
+                    <span class="icon icon-arrow-left"></span>
+                </a>
+            </li>
+        {% endif %}
 
-            {% if page.has_next %}
-                <li><a href="?page={{ page.next_page_number }}"><i class="far fa-chevron-right"></i></a></li>
-                <li><a href="?page={{ page.paginator.num_pages }}"> fin </a></li>
-            {% endif %}
-        </ul>
-    </div>
+        <!-- Page actuelle -->
+        <li class="active">
+            <a href="#" class="pagination-link">{{ page.number }}</a>
+        </li>
+
+        <!-- Lien vers la page suivante -->
+        {% if page.has_next %}
+            <li>
+                <a href="?page={{ page.next_page_number }}" class="pagination-link animate-hover-btn">
+                    <span class="icon icon-arrow-right"></span>
+                </a>
+            </li>
+        {% endif %}
+
+        <!-- Lien vers la dernière page -->
+        {% if page.has_next %}
+            <li>
+                <a href="?page={{ page.paginator.num_pages }}" class="pagination-link animate-hover-btn">
+                    {{ page.paginator.num_pages }}
+                </a>
+            </li>
+        {% endif %}
+    </ul>
 {% endif %}

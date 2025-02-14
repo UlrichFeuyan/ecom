@@ -1,0 +1,258 @@
+{% extends 'gestion_base.html' %}
+{% load static %}
+
+{% block css_perso %}    
+    <style>
+        html * {
+            box-sizing: border-box;
+        }
+        
+        p {
+            margin: 0;
+        }
+        
+        /* Upload box */
+        .upload__box {
+            padding: 40px;
+        }
+        
+        /* Input file caché */
+        .upload__inputfile {
+            width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            overflow: hidden;
+            position: absolute;
+            z-index: -1;
+        }
+        
+        /* Bouton d'upload */
+        .upload__btn {
+            display: inline-block;
+            font-weight: 600;
+            color: #fff;
+            text-align: center;
+            min-width: 116px;
+            padding: 5px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid #61b482;
+            background-color: #61b482;
+            border-radius: 10px;
+            line-height: 26px;
+            font-size: 14px;
+        }
+        
+        /* Effet au survol */
+        .upload__btn:hover {
+            background-color: #4fa06d;
+            border-color: #4fa06d;
+            transition: all 0.3s ease;
+        }
+        
+        /* Espace autour du bouton */
+        .upload__btn-box {
+            margin-bottom: 10px;
+        }
+        
+        /* Conteneur d'images */
+        .upload__img-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -10px;
+        }
+        
+        /* Image box */
+        .upload__img-box {
+            width: 200px;
+            padding: 0 10px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+        
+        /* Bouton de suppression */
+        .upload__img-close {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.5);
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            text-align: center;
+            line-height: 24px;
+            z-index: 1;
+            cursor: pointer;
+        }
+        
+        /* Icône de suppression */
+        .upload__img-close::after {
+            content: '\2716'; /* Symbole X */
+            font-size: 14px;
+            color: white;
+        }
+        
+        /* Image d'upload */
+        .img-bg {
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            position: relative;
+            padding-bottom: 100%;
+        }         
+    </style>
+{% endblock css_perso %}
+
+{% block products_base_content %}
+    <style>
+        #productsTable {
+            font-size: 16px; /* Ajuste la taille des caractères */
+        }
+        #productsTable th, #productsTable td {
+            padding: 12px; /* Ajuste l'espacement */
+        }
+        /* Empêcher le retour à la ligne pour la colonne "Nom du produit" */
+        table.dataTable thead th:nth-child(7),
+        /* Empêcher le retour à la ligne pour la colonne "Tags" */
+        table.dataTable tbody td:nth-child(8) {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px; /* Ajuste selon tes besoins */
+        }
+    </style>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <div class="row">
+                <div class="col-9">
+                    <h6 class="m-0 font-weight-bold text">Liste des produits</h6>
+                </div>
+                
+                <div class="col-3">
+                    <div class="row">
+                        <div class="col-11">
+                            <div class="row">
+                                <a class="btn btn-success btn-sm custom-btn-green" id="bouton_ajout_produit" href="#add_product" hx-get="{% url 'products:get_add_product_form' %}" hx-target="#dialog_add_product" data-bs-toggle="modal"><i class="icon icon-add"></i>Ajouter</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+        </div>
+            <table id="productsTable" class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th class="">Visuel</th>
+                        <th class="">Nom du produit</th>
+                        <th class="">Catégorie</th>
+                        <th class="">Marque</th>
+                        <th class="">Tags</th>
+                        <th class="">Prix</th>
+                        <th class="">En stock</th>
+                        <th class="">Actions</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+{% endblock products_base_content %}
+
+{% block modal_perso %}
+    <!-- modal add product -->
+    <div class="modal fade modalDemo tf-product-modal" id="add_product">
+        <div class="modal-dialog modal-dialog-centered" id="dialog_add_product">
+            <div class="modal-content">
+                <div class="header">
+                    <div class="demo-title">Ajouter un produit</div>
+                    <span class="icon-close icon-close-popup" data-bs-dismiss="modal"></span>
+                </div>
+                <div class="modal-body">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /modal add product -->
+{% endblock modal_perso %}
+
+{% block js_perso %}
+    <script>
+        $(document).ready(function () {
+            $('#productsTable').DataTable({
+                "serverSide": true,
+                "ajax": {
+                    "url": "/products/api/products/",
+                    "type": "GET",
+                    "dataSrc": "data"
+                },
+                "columns": [
+                    { 
+                        "data": "first_image",
+                        "render": function (data) {
+                            return `<img src="${data}" alt="Image" width="150">`;
+                        }
+                    },
+                    { "data": "name" },
+                    { "data": "category_name" },
+                    { "data": "marque_name" },
+                    { 
+                        "data": "tags",
+                        "render": function (data) {
+                            return data.length > 0 ? data.join(', ') : "Aucun";
+                        }
+                    },
+                    { "data": "price" },
+                    { "data": "stock" },
+                    { 
+                        "data": "id",
+                        "render": function (data) {
+                            return `
+                                <a href="#" class="d-inline-block mx-2"><i class="icon icon-view"></i></a>
+                                <a href="#" class="d-inline-block mx-2"><i class="icon icon-edit"></i></a>
+                                <a href="#" class="d-inline-block mx-2"><i class="icon icon-delete"></i></a>
+                            `;
+                        }
+                    }
+                ],
+                "paging": true,
+                "pagingType": "simple_numbers",
+                "lengthChange": true,
+                "lengthMenu": [ [5, 10, 25, 50, -1], [5, 10, 25, 50, "Tous"] ],
+                "searching": true,
+                "ordering": false,
+                "info": true,
+                "autoWidth": true,
+                "responsive": true,
+                language: {
+                    processing:     "Traitement en cours...",
+                    search:         "Rechercher&nbsp;:",
+                    lengthMenu:     "Afficher _MENU_ &eacute;l&eacute;ments",
+                    info:           "Affichage de _START_ &agrave; _END_ sur _TOTAL_",
+                    infoEmpty:      "Affichage de 0 &agrave; 0 sur 0",
+                    infoFiltered:   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                    infoPostFix:    "",
+                    loadingRecords: "Chargement en cours...",
+                    zeroRecords:    "Aucun &eacute;l&eacute;ment &agrave; afficher",
+                    emptyTable:     "Aucune donnée disponible.",
+                    paginate: {
+                        first:      "Premier",
+                        previous:   "Pr&eacute;c&eacute;dent",
+                        next:       "Suivant",
+                        last:       "Dernier"
+                    },
+                    aria: {
+                        sortAscending:  ": activer pour trier la colonne par ordre croissant",
+                        sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                    }
+                }
+            });
+        });
+    </script>
+    <script src="{% static 'js/upload_images.js' %}"></script>
+    <script>
+        document.getElementById('bouton_ajout_produit').addEventListener('htmx:afterSwap', function() {
+            ImgUpload();
+        });
+    </script>
+{% endblock js_perso %}

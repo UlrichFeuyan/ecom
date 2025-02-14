@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from accounts.forms import SignupForm, LoginForm, ProfileForm
 from accounts.models import CustomUser
+import sweetify
 
 User = get_user_model()
 
@@ -35,6 +36,7 @@ def signup(request):
             print("Nom du nouvel utilisateur : " + user.username)
             CustomUser.objects.create(user=user)
             login(request, user)
+            sweetify.success(request, "Compte créer !", timer=2000, confirmButtonText="OK", timerProgressBar=True, position="top")
             return redirect('home')
     else:
         form = SignupForm()
@@ -51,9 +53,12 @@ def login_user(request):
         if user is not None:
             login(request, user)
             message = f'Bonjour {user.email}, vous êtes connecté.'
+            sweetify.success(request, message, timer=2000, toast=True, timerProgressBar=True, position="top")
             return redirect("home")
         else:
             message = "Nom d'utilisateur ou mot de passe incorrect."
+            sweetify.info(request, message, timer=3000, confirmButtonText="OK", timerProgressBar=True, position="top")
+            return render(request, "accounts/login.html", locals())
     else:
         form = LoginForm()
     return render(request, "accounts/login.html", locals())
@@ -61,6 +66,7 @@ def login_user(request):
 
 def logout_user(request):
     logout(request)
+    sweetify.success(request, "Déconnecter !", timer=2000, toast=True, timerProgressBar=True, position="top")
     return redirect('home')
 
 
@@ -74,7 +80,8 @@ def profil(request):
             user = form.save()
             # Mettre à jour la session pour éviter de déconnecter l'utilisateur
             update_session_auth_hash(request, user)
-            messages.success(request, "Votre profil a été mis à jour avec succès !")
+            messages="Votre profil a été mis à jour avec succès !"
+            sweetify.info(request, message, timer=3000, confirmButtonText="OK", timerProgressBar=True, position="top")
             return redirect('accounts:profil')
     else:
         form = ProfileForm(instance=request.user)

@@ -162,14 +162,14 @@ fieldset,
 form,
 label,
 legend,
-table,
+/* table,
 caption,
 tbody,
 tfoot,
 thead,
 tr,
 th,
-td,
+td, */
 article,
 aside,
 canvas,
@@ -4134,6 +4134,7 @@ header.header-bg {
   display: inline-block;
   padding: 6px 30px 6px 15px;
   color: var(--text-2);
+  background-color: transparent;
   border-radius: 3px;
   border: 1px solid var(--line);
   height: 42px;
@@ -14202,7 +14203,7 @@ blockquote .text {
   background: var(--bg-11);
   border-radius: 999px;
 }
-.account-order table {
+/* .account-order table {
   width: 100%;
   min-width: 700px;
 }
@@ -14221,7 +14222,7 @@ blockquote .text {
 }
 .account-order table tbody tr:not(:last-child) {
   border-bottom: 1px solid var(--line);
-}
+} */
 
 .list-account-address {
   display: grid;
@@ -19553,5 +19554,52 @@ blockquote .text {
     right: 0;
   }
 }
+.custom-btn-green {
+  background-color: #61b482; /* Couleur de fond personnalisée */
+  color: #ffffff; /* Couleur du texte (blanc pour un bon contraste) */
+  border-color: #61b482; /* Couleur de la bordure */
+}
 
+.custom-btn-green:hover {
+  background-color: #4fa06d; /* Couleur de fond au survol (une teinte plus foncée) */
+  border-color: #4fa06d; /* Couleur de la bordure au survol */
+}
+
+/* Définir la taille max de la modal */
+#add_product .modal-dialog {
+  max-width: min(1146px, 90vw);
+  max-height: 90vh; /* Hauteur max pour éviter que la modal prenne tout l'écran */
+  display: flex;
+}
+
+/* Permet de scroller uniquement à l'intérieur du contenu */
+#add_product .modal-content {
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+}
+
+/* Permet de fixer le header en haut */
+#add_product .modal-content .header {
+  flex-shrink: 0;
+  padding: 10px;
+  background: white;
+  border-bottom: 1px solid #ccc;
+}
+
+/* Permet le scroll du formulaire */
+#add_product .modal-body {
+  flex-grow: 1; /* Prend tout l'espace restant */
+  overflow-y: auto;
+  padding: 15px;
+  max-height: calc(90vh - 60px); /* Ajuste selon la hauteur du header et du footer */
+}
+
+/* Fixe le footer en bas */
+#add_product .modal-footer {
+  flex-shrink: 0;
+  background: white;
+  border-top: 1px solid #ccc;
+  padding: 10px;
+}
 /*# sourceMappingURL=styles.css.map */

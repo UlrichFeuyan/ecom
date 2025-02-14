@@ -22,6 +22,7 @@ django-permissionedforms==0.1
 django-taggit==6.1.0
 django-treebeard==4.7.1
 djangorestframework==3.15.2
+djangorestframework-datatables==0.7.2
 draftjs-exporter==5.0.0
 et_xmlfile==2.0.0
 filetype==1.2.0
@@ -41,6 +42,7 @@ plotly-express==0.4.1
 python-dateutil==2.9.0.post0
 pytz==2024.2
 requests==2.32.3
+rest-framework-simplejwt==0.0.2
 scipy==1.15.0
 six==1.17.0
 soupsieve==2.6

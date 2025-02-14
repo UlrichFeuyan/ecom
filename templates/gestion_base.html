@@ -13,7 +13,7 @@
                                 <a href="#" class="my-account-nav-item {% if tableau_de_bord_active %}active{% endif %}">Tableau de bord</a>
                             </li>
                             <li>
-                                <a href="#" class="my-account-nav-item {% if produits_active %}active{% endif %}">Produits</a>
+                                <a href="{% url 'products:products' %}" class="my-account-nav-item {% if produits_active %}active{% endif %}">Produits</a>
                             </li>
                             <li>
                                 <a href="#" class="my-account-nav-item {% if categories_active %}active{% endif %}">catégories</a>
@@ -34,9 +34,9 @@
                     <div class="my-account-content account-edit">
                         <div class="">
                             
-                            {% block accounts_base_content %}
+                            {% block products_base_content %}
                                 
-                            {% endblock accounts_base_content %}
+                            {% endblock products_base_content %}
                                 
                         </div>
                     </div>
