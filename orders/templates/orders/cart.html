@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <!-- page-cart -->
+    <section class="flat-spacing-11">
+        <div class="container">
+            <!-- <div class="tf-page-cart text-center mt_140 mb_200">
+                        <h5 class="mb_24">Your cart is empty</h5>
+                        <p class="mb_24">You may check out all the available products and buy some in the shop</p>
+                        <a href="shop-default.html" class="tf-btn btn-sm radius-3 btn-fill btn-icon animate-hover-btn">Return to shop<i class="icon icon-arrow1-top-left"></i></a>
+                    </div> -->
+            {% comment %} <div class="tf-cart-countdown">
+                <div class="title-left">
+                    <svg class="d-inline-block" xmlns="http://www.w3.org/2000/svg" width="16" height="24" viewBox="0 0 16 24" fill="rgb(219 18 21)">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M10.0899 24C11.3119 22.1928 11.4245 20.2409 10.4277 18.1443C10.1505 19.2691 9.64344 19.9518 8.90645 20.1924C9.59084 18.2379 9.01896 16.1263 7.19079 13.8576C7.15133 16.2007 6.58824 17.9076 5.50148 18.9782C4.00436 20.4517 4.02197 22.1146 5.55428 23.9669C-0.806588 20.5819 -1.70399 16.0418 2.86196 10.347C3.14516 11.7228 3.83141 12.5674 4.92082 12.8809C3.73335 7.84186 4.98274 3.54821 8.66895 0C8.6916 7.87426 11.1062 8.57414 14.1592 12.089C17.4554 16.3071 15.5184 21.1748 10.0899 24Z"></path>
+                    </svg>
+                    <p>These products are limited, checkout within</p>
+                </div>
+                <div class="js-countdown timer-count" data-timer="600" data-labels="d:,h:,m:,s"></div>
+            </div> {% endcomment %}
+            <div class="tf-page-cart-wrap">
+                <div class="tf-page-cart-item">
+                    <form>
+                        {% csrf_token %}
+                        <table class="tf-table-page-cart">
+                            <thead>
+                                <tr>
+                                    <th>Produit</th>
+                                    <th>Prix</th>
+                                    <th>Quantité</th>
+                                    <th>Sous-total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in items %}
+                                    <tr class="tf-cart-item file-delete">
+                                        <td class="tf-cart-item_product">
+                                            <a href="{% url 'products:detail' item.product.slug %}" class="img-box">
+                                                <img src="{% if user.is_authenticated %} {{ item.product.get_first_image.thumbnail.url }} {% else %} {{ item.product.thumbnailURL }} {% endif %}" alt="Iamge du produit" />
+                                            </a>
+                                            <div class="cart-info"> 
+                                                <a href="{% url 'products:detail' item.product.slug %}" class="cart-title link">{{ item.product.name }}</a>
+                                                <div class="cart-meta-variant"></div>
+                                                <span data-product="{{ item.product.id }}" data-action="delete" class="remove-cart link remove update-cart">Supprimer</span>
+                                            </div>
+                                        </td>
+                                        <td class="tf-cart-item_price" cart-data-title="Prix">
+                                            <div class="cart-price">{{ item.product.price }} Fcfa</div>
+                                        </td>
+                                        <td class="tf-cart-item_quantity" cart-data-title="Quantité">
+                                            <div class="cart-quantity">
+                                                <div class="wg-quantity">
+                                                    <span data-product="{{ item.product.id }}" data-action="remove" class="btn-quantity minus-btn update-cart">
+                                                        <svg class="d-inline-block" width="9" height="1" viewBox="0 0 9 1" fill="currentColor">
+                                                            <path d="M9 1H5.14286H3.85714H0V1.50201e-05H3.85714L5.14286 0L9 1.50201e-05V1Z"></path>
+                                                        </svg>
+                                                    </span>
+                                                    <input type="text" name="number" value="{{ item.quantity }}" />
+                                                    <span data-product="{{ item.product.id }}" data-action="add" class="btn-quantity plus-btn update-cart">
+                                                        <svg class="d-inline-block" width="9" height="9" viewBox="0 0 9 9" fill="currentColor">
+                                                            <path d="M9 5.14286H5.14286V9H3.85714V5.14286H0V3.85714H3.85714V0H5.14286V3.85714H9V5.14286Z"></path>
+                                                        </svg>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="tf-cart-item_total" cart-data-title="Sous-Total">
+                                            <div class="cart-total">{{item.get_total}} Fcfa</div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <div class="tf-page-cart-note">
+                            <label for="cart-note">Ajouter une note à la commande</label>
+                            <textarea name="note" id="cart-note" placeholder="Comment pouvons-nous vous aider?"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="tf-page-cart-footer">
+                    <div class="tf-cart-footer-inner">
+                        <div class="tf-free-shipping-bar">
+                            <div class="tf-progress-bar">
+                                <span style="width: 50%;">
+                                    <div class="progress-car">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="21" height="14" viewBox="0 0 21 14" fill="currentColor">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M0 0.875C0 0.391751 0.391751 0 0.875 0H13.5625C14.0457 0 14.4375 0.391751 14.4375 0.875V3.0625H17.3125C17.5867 3.0625 17.845 3.19101 18.0104 3.40969L20.8229 7.12844C20.9378 7.2804 21 7.46572 21 7.65625V11.375C21 11.8582 20.6082 12.25 20.125 12.25H17.7881C17.4278 13.2695 16.4554 14 15.3125 14C14.1696 14 13.1972 13.2695 12.8369 12.25H7.72563C7.36527 13.2695 6.39293 14 5.25 14C4.10706 14 3.13473 13.2695 2.77437 12.25H0.875C0.391751 12.25 0 11.8582 0 11.375V0.875ZM2.77437 10.5C3.13473 9.48047 4.10706 8.75 5.25 8.75C6.39293 8.75 7.36527 9.48046 7.72563 10.5H12.6875V1.75H1.75V10.5H2.77437ZM14.4375 8.89937V4.8125H16.8772L19.25 7.94987V10.5H17.7881C17.4278 9.48046 16.4554 8.75 15.3125 8.75C15.0057 8.75 14.7112 8.80264 14.4375 8.89937ZM5.25 10.5C4.76676 10.5 4.375 10.8918 4.375 11.375C4.375 11.8582 4.76676 12.25 5.25 12.25C5.73323 12.25 6.125 11.8582 6.125 11.375C6.125 10.8918 5.73323 10.5 5.25 10.5ZM15.3125 10.5C14.8293 10.5 14.4375 10.8918 14.4375 11.375C14.4375 11.8582 14.8293 12.25 15.3125 12.25C15.7957 12.25 16.1875 11.8582 16.1875 11.375C16.1875 10.8918 15.7957 10.5 15.3125 10.5Z"></path>
+                                        </svg>
+                                    </div>
+                                </span>
+                            </div>
+                            <div class="tf-progress-msg">
+                                Achetez 75,00 $ de plus pour bénéficier de la livraison gratuite
+                            </div>
+                        </div>
+                        <div class="tf-page-cart-checkout">
+                            <div class="tf-cart-totals-discounts">
+                                <h3>TOTAL</h3>
+                                <span class="total-value">{{order.get_cart_total}} Fcfa</span>
+                            </div>
+                            <p class="tf-cart-tax">
+                                Les taxes et les frais d'expédition sont calculés au moment du paiement. 
+                            </p>
+                            <div class="cart-checkbox">
+                                <input type="checkbox" class="tf-check" id="check-agree" />
+                                <label for="check-agree" class="fw-4">
+                                    J'accepte les conditions d'utilisation
+                                </label>
+                            </div>
+                            <div class="cart-checkout-btn">
+                                <a href="{% url 'orders:checkout' %}" class="tf-btn w-100 btn-fill animate-hover-btn radius-3 justify-content-center">
+                                    <span style="font-weight: 600;">Procéder au paiement</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- page-cart -->
+{% endblock content %}

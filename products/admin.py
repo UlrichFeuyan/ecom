@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.forms import CharField, ModelForm
+from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from products.models import Category, Marque, Product, ProductImage, Tag
 
 
@@ -19,18 +21,30 @@ class ProductImageInline(admin.TabularInline):
     verbose_name_plural = "Photos"
 
 
+
+class ProductAdminForm(ModelForm):
+    description = CharField(widget=CKEditorUploadingWidget())
+
+    class Meta:
+        model = Product
+        fields = '__all__'
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     inlines = [ProductImageInline, ]
     list_display = ['name', 'category', 'marque', 'visuel']
     list_filter = ['category', 'marque', 'tag']
-    search_fields = ['name', 'category', 'marque']
+    search_fields = ['name', 'category', 'marque', 'description']
     prepopulated_fields = {"slug": ("name",)}
+    form = ProductAdminForm
 
 
 @admin.register(Category)
 class CategorieAdmin(admin.ModelAdmin):
     inlines = [ProductInline, ]
+    list_display = ['name', 'visuel']
+    search_fields = ['name']
 
 
 @admin.register(ProductImage)

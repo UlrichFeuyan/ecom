@@ -1,31 +1,28 @@
 from django.forms import modelformset_factory
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from rest_framework_datatables.pagination import DatatablesPageNumberPagination
+from rest_framework_datatables.pagination import *
 from products.pagination import CustomDatatablesPagination
 from products.serializers import ProductSerializer
-from products.forms import ProductForm, ProductImageForm, ProductImageFormSet
+from products.forms import ProductForm
 from products.models import Category, Product, ProductImage
 from rest_framework import viewsets
 from django.contrib import messages
 from django.db import transaction
-from store.utils import cookieCart, cartData, guestOrder
+from django.http import JsonResponse
+from django.utils.text import slugify
 import sweetify
 
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    pagination_class = CustomDatatablesPagination  # Active la pagination DataTables
+    pagination_class = CustomDatatablesPagination # Active la pagination DataTables
+
 
 def product_list(request):
-    data = cartData(request)
-    cartItems = data['cartItems']
-    order = data['order']
-    items = data['items']
 
     products = Product.objects.all()
-    categories = Category.objects.all()
     paginator = Paginator(products, 6)
 
     page_num = request.GET.get('page')
@@ -40,34 +37,22 @@ def product_list(request):
     return render(request, "products/product_list.html", locals())
 
 def products(request):
-    data = cartData(request)
-    cartItems = data['cartItems']
-    order = data['order']
-    items = data['items']
-
-    products = Product.objects.all()
-    categories = Category.objects.all()
-    paginator = Paginator(products, 6)
-
-    page_num = request.GET.get('page')
-    page = paginator.get_page(page_num)
-    try:
-        page = paginator.page(page_num)
-    except PageNotAnInteger:
-        page = paginator.page(1)
-    except EmptyPage:
-        page = paginator.page(paginator.num_pages)
-
     return render(request, "products/products.html", locals())
 
+def check_slug(request):
+    """Vérifie si un slug est unique et le modifie si nécessaire"""
+    name = request.GET.get('name', '')
+    slug = slugify(name)
+    original_slug = slug
+    count = 1
+
+    while Product.objects.filter(slug=slug).exists():
+        slug = f"{original_slug}-{count}"
+        count += 1
+
+    return JsonResponse({"slug": slug})
+
 def product_detail(request, slug):
-    data = cartData(request)
-
-    cartItems = data['cartItems']
-    order = data['order']
-    items = data['items']
-
-    categories = Category.objects.all()
     product = get_object_or_404(Product, slug=slug)
     return render(request, "products/product_detail.html", locals())
 
@@ -112,12 +97,6 @@ def product_filter(request):
     pass
 
 def product_search(request):
-    data = cartData(request)
-
-    cartItems = data['cartItems']
-    order = data['order']
-    items = data['items']
-    categories = Category.objects.all()
 
     query = request.GET.get('query')
     page_title = "Résultats"
@@ -167,14 +146,4 @@ def instant_search_suggests(request):
         products = Product.objects.filter(tag__name__icontains=query)
     
     return render(request, 'products/product_instant_search_suggests.html', locals())
-
-def cart(request):
-    data = cartData(request)
-    cartItems = data['cartItems']
-    order = data['order']
-    items = data['items']
-
-    categories = Category.objects.all()
-
-    return render(request, 'store/cart.html', locals())
 

@@ -18,19 +18,68 @@
     <link rel="stylesheet" href="{% static 'css/swiper-bundle.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/animate.css' %}">
     <link rel="stylesheet"type="text/css" href="{% static 'css/styles.css' %}"/>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     
     <!-- Favicon and Touch Icons  -->
     <link rel="shortcut icon" href="{% static 'images/logo/favicon.png' %}">
     <link rel="apple-touch-icon-precomposed" href="{% static 'images/logo/favicon.png' %}">
-
+    
     <!-- Datatables  -->
     <link href="{% static 'lib/datatables/datatables.min.css' %}" rel="stylesheet">
-
+    
     
     {% block css_perso %}
-        
+    
     {% endblock css_perso %}
+    <script type="text/javascript">
+        var user = '{{ request.user }}'
         
+        function getToken(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrftoken = getToken('csrftoken')
+        
+        function getCookie(name) {
+            // Split cookie string and get all individual name=value pairs in an array
+            var cookieArr = document.cookie.split(";");
+            
+            // Loop through the array elements
+            for(var i = 0; i < cookieArr.length; i++) {
+                var cookiePair = cookieArr[i].split("=");
+                
+                /* Removing whitespace at the beginning of the cookie name
+                and compare it with the given string */
+                if(name == cookiePair[0].trim()) {
+                    // Decode the cookie value and return
+                    return decodeURIComponent(cookiePair[1]);
+                }
+            }
+            
+            // Return null if not found
+            return null;
+        }
+        var cart = JSON.parse(getCookie('cart'))
+        
+        if (cart == undefined){
+            cart = {}
+            console.log('Cart Created!', cart)
+            document.cookie ='cart=' + JSON.stringify(cart) + ";domain=;path=/"
+        }
+        console.log('Cart:', cart)
+        console.log('Utilisateur:', user)
+    </script>
 </head>
 
 <body class="preload-wrapper color-primary-8 color-main-text-2">
@@ -47,81 +96,81 @@
     </div>
     <!-- /preload -->
     <div id="wrapper">
-
+        
         {% if top_bar %}
-            <!-- Top bar -->
-            <div class="tf-top-bar bg_grey-7">
-                <div class="px_15 lg-px_40">
-                    <div class="tf-top-bar_wrap grid-3 gap-30 align-items-center">
-                        <div class="tf-top-bar_left">
-                            <ul class="d-flex gap-20">
-                                <li>
-                                    <a href="#" class="fw-5">Contact</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="fw-5">Blog</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="fw-5">Order Tracking</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="text-center overflow-hidden">
-                            <div dir="ltr" class="swiper tf-sw-top_bar" data-preview="1" data-space="0" data-loop="true" data-speed="1000" data-delay="2000">
-                                <div class="swiper-wrapper">
-                                    <div class="swiper-slide">
-                                        <p class="top-bar-text fw-5">Spring Sale: Sweet Crunchy Salad. <a href="#" title="all collection" class="tf-btn btn-line">Shop now<i class="icon icon-arrow1-top-left"></i></a></p>
-                                    </div>
-                                    <div class="swiper-slide">
-                                        <p class="top-bar-text fw-5">Summer sale discount off 70%</p>
-                                    </div>
+        <!-- Top bar -->
+        <div class="tf-top-bar bg_grey-7">
+            <div class="px_15 lg-px_40">
+                <div class="tf-top-bar_wrap grid-3 gap-30 align-items-center">
+                    <div class="tf-top-bar_left">
+                        <ul class="d-flex gap-20">
+                            <li>
+                                <a href="#" class="fw-5">Contact</a>
+                            </li>
+                            <li>
+                                <a href="#" class="fw-5">Blog</a>
+                            </li>
+                            <li>
+                                <a href="#" class="fw-5">Order Tracking</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="text-center overflow-hidden">
+                        <div dir="ltr" class="swiper tf-sw-top_bar" data-preview="1" data-space="0" data-loop="true" data-speed="1000" data-delay="2000">
+                            <div class="swiper-wrapper">
+                                <div class="swiper-slide">
+                                    <p class="top-bar-text fw-5">Spring Sale: Sweet Crunchy Salad. <a href="#" title="all collection" class="tf-btn btn-line">Shop now<i class="icon icon-arrow1-top-left"></i></a></p>
+                                </div>
+                                <div class="swiper-slide">
+                                    <p class="top-bar-text fw-5">Summer sale discount off 70%</p>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="top-bar-language tf-cur justify-content-end">
-                            <div class="d-inline-block">
-                                Need help?
-                                <span class="fw-7">
-                                    Call Us: <a href="{% static 'tel:+18001090' %}" style="text-decoration: underline;" aria-describedby="external-message">+18001090</a>
-                                </span>
-                            </div>
-                            <div class="tf-currencies">
-                                <select class="image-select center style-default type-currencies">
-                                    <option data-thumbnail="{% static 'images/country/fr.svg' %}">EUR <span>€ | France</span></option>
-                                    <option data-thumbnail="{% static 'images/country/de.svg' %}">EUR <span>€ | Germany</span></option>
-                                    <option selected data-thumbnail="{% static 'images/country/us.svg' %}">USD <span>$ | United States</span></option>
-                                    <option data-thumbnail="{% static 'images/country/vn.svg' %}">VND <span>₫ | Vietnam</span></option>
-                                </select>
-                            </div>
-                            <div class="tf-languages">
-                                <select class="image-select center style-default type-languages">
-                                    <option>English</option>
-                                    <option>العربية</option>
-                                    <option>简体中文</option>
-                                    <option>اردو</option>
-                                </select>
-                            </div>
-                            
+                    </div>
+                    
+                    <div class="top-bar-language tf-cur justify-content-end">
+                        <div class="d-inline-block">
+                            Need help?
+                            <span class="fw-7">
+                                Call Us: <a href="{% static 'tel:+18001090' %}" style="text-decoration: underline;" aria-describedby="external-message">+18001090</a>
+                            </span>
                         </div>
-                </div>
+                        <div class="tf-currencies">
+                            <select class="image-select center style-default type-currencies">
+                                <option data-thumbnail="{% static 'images/country/fr.svg' %}">EUR <span>€ | France</span></option>
+                                <option data-thumbnail="{% static 'images/country/de.svg' %}">EUR <span>€ | Germany</span></option>
+                                <option selected data-thumbnail="{% static 'images/country/us.svg' %}">USD <span>$ | United States</span></option>
+                                <option data-thumbnail="{% static 'images/country/vn.svg' %}">VND <span>₫ | Vietnam</span></option>
+                            </select>
+                        </div>
+                        <div class="tf-languages">
+                            <select class="image-select center style-default type-languages">
+                                <option>English</option>
+                                <option>العربية</option>
+                                <option>简体中文</option>
+                                <option>اردو</option>
+                            </select>
+                        </div>
+                        
+                    </div>
                 </div>
             </div>
-            <!-- /Top bar -->
+        </div>
+        <!-- /Top bar -->
         {% endif %}
-
+        
         {% include "header.html" %}
         
         {% if page_title %}
-            {% include "page_title.html" %}
+        {% include "page_title.html" %}
         {% endif %}
-
-
+        
+        
         {% block content %}
         
         {% endblock content %}
         
-
+        
         {% include "footer.html" %}
         
     </div>
@@ -135,9 +184,9 @@
     <!-- /gotop -->
     
     {% block modal_perso %}
-        
+    
     {% endblock modal_perso %}
-
+    
     
     <!-- sidebar account-->
     <div class="offcanvas offcanvas-start canvas-filter canvas-sidebar canvas-sidebar-account" id="mbAccount">
@@ -147,13 +196,13 @@
                 <span class="icon-close icon-close-popup" data-bs-dismiss="offcanvas" aria-label="Close"></span>
             </header>
             <div class="canvas-body sidebar-mobile-append">
-                 
+                
             </div>
             
         </div>       
     </div>
     <!-- End sidebar account -->
-
+    
     <!-- Filter -->
     <div class="offcanvas offcanvas-start canvas-filter" id="filterShop">
         <div class="canvas-wrapper">
@@ -383,7 +432,7 @@
                 <div class="toolbar-icon">
                     <i class="icon-shop"></i>
                 </div>
-                <div class="toolbar-label">Shop</div>
+                <div class="toolbar-label">Boutique</div>
             </a>
         </div>
         
@@ -396,11 +445,11 @@
             </a>
         </div>
         <div class="toolbar-item">
-            <a href="#login" data-bs-toggle="modal">
+            <a href="{% if user.is_authenticated %}{% url 'accounts:profil' %}{% else %}{% url 'accounts:login' %}{% endif %}">
                 <div class="toolbar-icon">
                     <i class="icon-account"></i>
                 </div>
-                <div class="toolbar-label">Account</div>
+                <div class="toolbar-label">Profile</div>
             </a>
         </div>
         <div class="toolbar-item">
@@ -409,16 +458,16 @@
                     <i class="icon-heart"></i>
                     <div class="toolbar-count">0</div>
                 </div>
-                <div class="toolbar-label">Wishlist</div>
+                <div class="toolbar-label">Souhaits</div>
             </a>
         </div>
         <div class="toolbar-item">
-            <a href="#shoppingCart" data-bs-toggle="modal">
+            <a href="{% url 'orders:cart' %}">
                 <div class="toolbar-icon">
                     <i class="icon-bag"></i>
-                    <div class="toolbar-count">1</div>
+                    <div class="toolbar-count">{% if cartItems %}{{ cartItems }}{% else %}0{% endif %}</div>
                 </div>
-                <div class="toolbar-label">Cart</div>
+                <div class="toolbar-label">Panier</div>
             </a>
         </div>
     </div>
@@ -735,301 +784,66 @@
             <div class="mb-body">
                 <ul class="nav-ul-mb" id="wrapper-menu-navigation">
                     <li class="nav-mb-item">
-                        <a href="#dropdown-menu-one" class="collapsed mb-menu-link current" data-bs-toggle="collapse" aria-expanded="true" aria-controls="dropdown-menu-one">
-                            <span>Home</span>
-                            <span class="btn-open-sub"></span>
-                        </a>
-                        <div id="dropdown-menu-one" class="collapse">
-                            <ul class="sub-nav-menu" >
-                                <li><a href="#" class="sub-nav-link">Home Fashion 01</a></li>
-                                <li><a href="#" class="sub-nav-link">Home Fashion 02</a></li>
-                                <li><a href="#" class="sub-nav-link">Home Fashion 03</a></li>
-                                <li><a href="#" class="sub-nav-link">Home Fashion 04</a></li>
-                                <li><a href="#" class="sub-nav-link">Home Fashion 05</a></li>
-                                <li><a href="#" class="sub-nav-link">Home Fashion 06</a></li>
-                                <li><a href="#" class="sub-nav-link">Home Fashion 07</a></li>
-                                <li><a href="#" class="sub-nav-link">Home Fashion 08</a></li>
-                                <li><a href="#" class="sub-nav-link">Home Gift Card</a></li>
-                                <li><a href="#" class="sub-nav-link">Home Headphone</a></li>
-                                <li><a href="#" class="sub-nav-link">Home Multi Brand</a></li>
-                                <li><a href="#" class="sub-nav-link">Home skincare</a></li>
-                                <li><a href="#" class="sub-nav-link">Home Headphone</a></li>
-                                <li><a href="#" class="sub-nav-link">Home Gift Card</a></li>
-                                <li><a href="#" class="sub-nav-link">Home Furniture</a></li>
-                                <li><a href="#" class="sub-nav-link">Home Furniture 2</a></li>
-                                <li><a href="#" class="sub-nav-link">Home Skateboard</a></li>
-                                <li><a href="#" class="sub-nav-link">Home Stroller</a></li>
-                                <li><a href="#" class="sub-nav-link">Home Decor</a></li>
-                                <li><a href="#" class="sub-nav-link">Home Electronic</a></li>
-                                <li><a href="#" class="sub-nav-link">Home Setup Gear</a></li>
-                                <li><a href="#" class="sub-nav-link">Home Dog Accessories</a></li>
-                                <li><a href="#" class="sub-nav-link">Home Kitchen Wear</a></li>
-                                <li><a href="#" class="sub-nav-link">Home Phonecase</a></li>
-                                <li><a href="#" class="sub-nav-link">Home Paddle Boards</a></li>
-                                <li><a href="#" class="sub-nav-link">Home Glasses</a></li>
-                                <li><a href="#" class="sub-nav-link">Home POD Store</a></li>
-                                <li><a href="#" class="sub-nav-link">Home Activewear</a></li>
-                                <li><a href="#" class="sub-nav-link">Home Handbag</a></li>
-                                <li><a href="#" class="sub-nav-link">Home Tee</a></li>
-                                <li><a href="#" class="sub-nav-link">Home Sock</a></li>
-                                <li><a href="#" class="sub-nav-link">Home Jewelry</a></li>
-                                <li><a href="#" class="sub-nav-link">Home Sneaker</a></li>
-                                <li><a href="#" class="sub-nav-link">Home Accessories</a></li>
-                                <li><a href="#" class="sub-nav-link">Home Grocery</a></li>
-                                <li><a href="#" class="sub-nav-link">Home Baby</a></li>
-                            </ul>
-                        </div>
-                        
+                        <a href="{% url 'home' %}" class="mb-menu-link">Accueil</a>
                     </li>
                     <li class="nav-mb-item">
-                        <a href="#dropdown-menu-two" class="collapsed mb-menu-link current" data-bs-toggle="collapse" aria-expanded="true" aria-controls="dropdown-menu-two">
-                            <span>Shop</span>
-                            <span class="btn-open-sub"></span>
-                        </a>
-                        <div id="dropdown-menu-two" class="collapse">
-                            <ul class="sub-nav-menu" id="sub-menu-navigation">
-                                <li><a href="#sub-shop-one" class="sub-nav-link collapsed"  data-bs-toggle="collapse" aria-expanded="true" aria-controls="sub-shop-one">
-                                    <span>Shop layouts</span>
-                                    <span class="btn-open-sub"></span>
-                                </a>
-                                <div id="sub-shop-one" class="collapse">
-                                    <ul class="sub-nav-menu sub-menu-level-2">
-                                        <li><a href="#" class="sub-nav-link">Default</a></li>
-                                        <li><a href="#" class="sub-nav-link">Left sidebar</a></li>
-                                        <li><a href="#" class="sub-nav-link">Right sidebar</a></li>
-                                        <li><a href="#" class="sub-nav-link">Fullwidth</a></li>
-                                        <li><a href="#" class="sub-nav-link">Sub collection</a></li>
-                                        <li><a href="#" class="sub-nav-link">Collections list</a></li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li>
-                                <a href="#sub-shop-two" class="sub-nav-link collapsed"  data-bs-toggle="collapse" aria-expanded="true" aria-controls="sub-shop-two">
-                                    <span>Features</span>
-                                    <span class="btn-open-sub"></span>
-                                </a>
-                                <div id="sub-shop-two" class="collapse">
-                                    <ul class="sub-nav-menu sub-menu-level-2">
-                                        <li><a href="#" class="sub-nav-link">Pagination links</a></li>
-                                        <li><a href="#" class="sub-nav-link">Pagination loadmore</a></li>
-                                        <li><a href="#" class="sub-nav-link">Pagination infinite scrolling</a></li>
-                                        <li><a href="#" class="sub-nav-link">Filter sidebar</a></li>
-                                        <li><a href="#" class="sub-nav-link">Filter hidden</a></li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li>
-                                <a href="#sub-shop-three" class="sub-nav-link collapsed"  data-bs-toggle="collapse" aria-expanded="true" aria-controls="sub-shop-three">
-                                    <span>Product styles</span>
-                                    <span class="btn-open-sub"></span>
-                                </a>
-                                <div id="sub-shop-three" class="collapse">
-                                    <ul class="sub-nav-menu sub-menu-level-2">
-                                        <li><a href="#" class="sub-nav-link">Product style list</a></li>
-                                        <li><a href="#" class="sub-nav-link">Product style 01</a></li>
-                                        <li><a href="#" class="sub-nav-link">Product style 02</a></li>
-                                        <li><a href="#" class="sub-nav-link">Product style 03</a></li>
-                                        <li><a href="#" class="sub-nav-link">Product style 04</a></li>
-                                        <li><a href="#" class="sub-nav-link">Product style 05</a></li>
-                                        <li><a href="#" class="sub-nav-link">Product style 06</a></li>
-                                        <li><a href="#" class="sub-nav-link">Product style 07</a></li>
-                                    </ul>
-                                </div>
-                            </li>
-                        </ul>
+                        <a href="{% url 'products:list' %}" class="mb-menu-link">Boutique</a>
+                    </li>
+                    <li class="nav-mb-item">
+                        <a href="{% url 'products:products' %}" class="mb-menu-link">produits</a>
+                    </li>
+                    <li class="nav-mb-item">
+                        <a href="{% url 'contact' %}" class="mb-menu-link">Contact</a>
+                    </li>
+                    <li class="nav-mb-item">
+                        <a href="{% url 'faq' %}" class="mb-menu-link">FAQ</a>
+                    </li>
+                </ul>
+                <div class="mb-other-content">
+                    <div class="d-flex group-icon">
+                        <a href="#" class="site-nav-icon"><i class="icon icon-heart"></i>Liste Des Souhaits</a>
+                        <a href="#" class="site-nav-icon"><i class="icon icon-search"></i>Rechercher</a>
                     </div>
-                </li>
-                <li class="nav-mb-item">
-                    <a href="#dropdown-menu-three" class="collapsed mb-menu-link current" data-bs-toggle="collapse" aria-expanded="true" aria-controls="dropdown-menu-three">
-                        <span>Products</span>
-                        <span class="btn-open-sub"></span>
-                    </a>
-                    <div id="dropdown-menu-three" class="collapse">
-                        <ul class="sub-nav-menu" id="sub-menu-navigation">
-                            <li>
-                                <a href="#sub-product-one" class="sub-nav-link collapsed"  data-bs-toggle="collapse" aria-expanded="true" aria-controls="sub-product-one">
-                                    <span>Product layouts</span>
-                                    <span class="btn-open-sub"></span>
-                                </a>
-                                <div id="sub-product-one" class="collapse">
-                                    <ul class="sub-nav-menu sub-menu-level-2">
-                                        <li><a href="#" class="sub-nav-link">Product default</a></li>
-                                        <li><a href="#" class="sub-nav-link">Product grid 1</a></li>
-                                        <li><a href="#" class="sub-nav-link">Product grid 2</a></li>
-                                        <li><a href="#" class="sub-nav-link">Product stacked</a></li>
-                                        <li><a href="#" class="sub-nav-link">Product right thumbnails</a></li>
-                                        <li><a href="#" class="sub-nav-link">Product bottom thumbnails</a></li>
-                                        <li><a href="#" class="sub-nav-link">Product drawer sidebar</a></li>
-                                        <li><a href="#" class="sub-nav-link">Product description accordion</a></li>
-                                        <li><a href="#" class="sub-nav-link">Product description list</a></li>
-                                        <li><a href="#" class="sub-nav-link">Product description vertical</a></li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li>
-                                <a href="#sub-product-two" class="sub-nav-link collapsed"  data-bs-toggle="collapse" aria-expanded="true" aria-controls="sub-product-two">
-                                    <span>Product details</span>
-                                    <span class="btn-open-sub"></span>
-                                </a>
-                                <div id="sub-product-two" class="collapse">
-                                    <ul class="sub-nav-menu sub-menu-level-2">
-                                        <li><a href="#" class="sub-nav-link">Product inner zoom</a></li>
-                                        <li><a href="#" class="sub-nav-link">Product zoom magnifier</a></li>
-                                        <li><a href="#" class="sub-nav-link">Product no zoom</a></li>
-                                        <li><a href="#" class="sub-nav-link">Product photoswipe popup</a></li>
-                                        <li><a href="#" class="sub-nav-link">Product external zoom and photoswipe popup</a></li>
-                                        <li><a href="#" class="sub-nav-link">Product video</a></li>
-                                        <li><a href="#" class="sub-nav-link">Product 3D, AR models</a></li>
-                                        <li><a href="#" class="sub-nav-link">Product options & customizer</a></li>
-                                        <li><a href="#" class="sub-nav-link">Advanced product types</a></li>
-                                        <li><a href="#" class="sub-nav-link">Recipient information form for gift card products</a></li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li>
-                                <a href="#sub-product-three" class="sub-nav-link collapsed"  data-bs-toggle="collapse" aria-expanded="true" aria-controls="sub-product-three">
-                                    <span>Product swatchs</span>
-                                    <span class="btn-open-sub"></span>
-                                </a>
-                                <div id="sub-product-three" class="collapse">
-                                    <ul class="sub-nav-menu sub-menu-level-2">
-                                        <li><a href="#" class="sub-nav-link">Product color swatch</a></li>
-                                        <li><a href="#" class="sub-nav-link">Product rectangle</a></li>
-                                        <li><a href="#" class="sub-nav-link">Product rectangle color</a></li>
-                                        <li><a href="#" class="sub-nav-link">Product swatch image</a></li>
-                                        <li><a href="#" class="sub-nav-link">Product swatch image rounded</a></li>
-                                        <li><a href="#" class="sub-nav-link">Product swatch dropdown</a></li>
-                                        <li><a href="#" class="sub-nav-link">Product swatch dropdown color</a></li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li>
-                                <a href="#sub-product-four" class="sub-nav-link collapsed"  data-bs-toggle="collapse" aria-expanded="true" aria-controls="sub-product-four">
-                                    <span>Product features</span>
-                                    <span class="btn-open-sub"></span>
-                                </a>
-                                <div id="sub-product-four" class="collapse">
-                                    <ul class="sub-nav-menu sub-menu-level-2">
-                                        <li><a href="#" class="sub-nav-link">Frequently bought together</a></li>
-                                        <li><a href="#" class="sub-nav-link">Frequently bought together 2</a></li>
-                                        <li><a href="#" class="sub-nav-link">Product upsell features</a></li>
-                                        <li><a href="#" class="sub-nav-link">Product pre-orders</a></li>
-                                        <li><a href="#" class="sub-nav-link">Back in stock notification</a></li>
-                                        <li><a href="#" class="sub-nav-link">Product pickup</a></li>
-                                        <li><a href="#" class="sub-nav-link">Variant images grouped</a></li>
-                                        <li><a href="#" class="sub-nav-link">Complimentary products</a></li>
-                                        <li><a href="#" class="sub-nav-link line-clamp">Quick order list<div class="demo-label"><span class="demo-new">New</span></div></a></li>
-                                    </ul>
-                                </div>
-                            </li>
-                        </ul>
+                    <div class="mb-notice">
+                        <a href="{% url 'contact' %}" class="text-need">Besoin d'aide ?</a>
                     </div>
-                </li>
-                <li class="nav-mb-item">
-                    <a href="#dropdown-menu-four" class="collapsed mb-menu-link current" data-bs-toggle="collapse" aria-expanded="true" aria-controls="dropdown-menu-four">
-                        <span>Pages</span>
-                        <span class="btn-open-sub"></span>
-                    </a>
-                    <div id="dropdown-menu-four" class="collapse">
-                        <ul class="sub-nav-menu" id="sub-menu-navigation">
-                            <li><a href="#" class="sub-nav-link">About us</a></li>
-                            <li><a href="#" class="sub-nav-link line-clamp">Brands<div class="demo-label"><span class="demo-new">New</span></div></a></li>
-                            <li><a href="#" class="sub-nav-link">Brands V2</a></li>
-                            <li><a href="#" class="sub-nav-link">Contact 1</a></li>
-                            <li><a href="#" class="sub-nav-link">Contact 2</a></li>
-                            <li><a href="#" class="sub-nav-link">FAQ 01</a></li>
-                            <li><a href="#" class="sub-nav-link">FAQ 02</a></li>
-                            <li><a href="#" class="sub-nav-link">Our store</a></li>
-                            <li><a href="#" class="sub-nav-link">Store locator</a></li>
-                            <li><a href="#" class="sub-nav-link line-clamp">Timeline<div class="demo-label"><span class="demo-new">New</span></div></a></li>
-                            <li><a href="#" class="sub-nav-link line-clamp">View cart</a></li>
-                            <li><a href="#" class="sub-nav-link line-clamp">Check out</a></li>
-                            <li><a href="#" class="sub-nav-link line-clamp">Payment Confirmation</a></li>
-                            <li><a href="#" class="sub-nav-link line-clamp">Payment Failure</a></li>
-                            <li><a href="#sub-account" class="sub-nav-link collapsed"  data-bs-toggle="collapse" aria-expanded="true" aria-controls="sub-account">
-                                <span>My Account</span>
-                                <span class="btn-open-sub"></span>
-                            </a>
-                            <div id="sub-account" class="collapse">
-                                <ul class="sub-nav-menu sub-menu-level-2">
-                                    <li><a href="#" class="sub-nav-link">My account</a></li>
-                                    <li><a href="#" class="sub-nav-link">My order</a></li>
-                                    <li><a href="#" class="sub-nav-link">My order details</a></li>
-                                    <li><a href="#" class="sub-nav-link">My address</a></li>
-                                    <li><a href="#" class="sub-nav-link">My account details</a></li>
-                                    <li><a href="#" class="sub-nav-link">My wishlist</a></li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li><a href="#" class="sub-nav-link line-clamp">Invoice</a></li>
-                        <li><a href="#" class="sub-nav-link line-clamp">404</a></li>
+                    <ul class="mb-info">
+                        <li>Address: Odza, Yaoundé<br> Cameroun</li>
+                        <li>Email: <b>kimi.sarl@gmail.com</b></li>
+                        <li>Phone: <b>(212) 555-1234</b></li>
                     </ul>
                 </div>
-                
-            </li>
-            <li class="nav-mb-item">
-                <a href="#dropdown-menu-five" class="collapsed mb-menu-link current" data-bs-toggle="collapse" aria-expanded="true" aria-controls="dropdown-menu-five">
-                    <span>Blog</span>
-                    <span class="btn-open-sub"></span>
-                </a>
-                <div id="dropdown-menu-five" class="collapse">
-                    <ul class="sub-nav-menu" >
-                        <li><a href="#" class="sub-nav-link">Grid layout</a></li>
-                        <li><a href="#" class="sub-nav-link">Left sidebar</a></li>
-                        <li><a href="#" class="sub-nav-link">Right sidebar</a></li>
-                        <li><a href="#" class="sub-nav-link">Blog list</a></li>
-                        <li><a href="#" class="sub-nav-link">Single Post</a></li>
-                    </ul>
+            </div>
+            
+            <div class="mb-bottom">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'accounts:profil' %}" class="site-nav-icon"><i class="icon icon-account"></i> {% if user.username %} {{ user.username|lower|title }} {% else %} Profil {% endif %}</a>
+                    <a href="{% url 'accounts:logout' %}" class="site-nav-icon"><i class="icon icon icon-logout"></i>Déconnexion</a>
+                {% else %}
+                    <a href="{% url 'accounts:login' %}" class="site-nav-icon"><i class="icon icon-account"></i>Login</a> 
+                {% endif %}
+                <div class="bottom-bar-language">
+                    <div class="tf-currencies">
+                        <select class="image-select center style-default type-currencies">
+                            <option data-thumbnail="{% static 'images/country/fr.svg' %}">EUR <span>€ | Euro</span></option>
+                            <option selected data-thumbnail="{% static 'images/country/us.svg' %}">USD <span>$ | United States</span></option>
+                            <option data-thumbnail="{% static 'images/country/vn.svg' %}">VND <span>₫ | Vietnam</span></option>
+                        </select>
+                    </div>
+                    <div class="tf-languages">
+                        <select class="image-select center style-default type-languages">
+                            <option>English</option>
+                            <option>Français</option>
+                        </select>
+                    </div>
                 </div>
-                
-            </li>
-            <li class="nav-mb-item">
-                <a href="https://themeforest.net/item/ecomus-ultimate-html5-template/53417990?s_rank=3" class="mb-menu-link">Buy now</a>
-            </li>
-        </ul>
-        <div class="mb-other-content">
-            <div class="d-flex group-icon">
-                <a href="#" class="site-nav-icon"><i class="icon icon-heart"></i>Wishlist</a>
-                <a href="#" class="site-nav-icon"><i class="icon icon-search"></i>Search</a>
             </div>
-            <div class="mb-notice">
-                <a href="#" class="text-need">Need help ?</a>
-            </div>
-            <ul class="mb-info">
-                <li>Address: 1234 Fashion Street, Suite 567, <br> New York, NY 10001</li>
-                <li>Email: <b>info@fashionshop.com</b></li>
-                <li>Phone: <b>(212) 555-1234</b></li>
-            </ul>
-        </div>
-    </div>
-
-    <div class="mb-bottom">
-        <a href="#" class="site-nav-icon"><i class="icon icon-account"></i>Login</a>
-        <div class="bottom-bar-language">
-            <div class="tf-currencies">
-                <select class="image-select center style-default type-currencies">
-                    <option data-thumbnail="{% static 'images/country/fr.svg' %}">EUR <span>€ | France</span></option>
-                    <option data-thumbnail="{% static 'images/country/de.svg' %}">EUR <span>€ | Germany</span></option>
-                    <option selected data-thumbnail="{% static 'images/country/us.svg' %}">USD <span>$ | United States</span></option>
-                    <option data-thumbnail="{% static 'images/country/vn.svg' %}">VND <span>₫ | Vietnam</span></option>
-                </select>
-            </div>
-            <div class="tf-languages">
-                <select class="image-select center style-default type-languages">
-                    <option>English</option>
-                    <option>العربية</option>
-                    <option>简体中文</option>
-                    <option>اردو</option>
-                </select>
-            </div>
-        </div>
-    </div>
-    </div>       
+        </div>       
     </div>
     <!-- /mobile menu -->
-
-
-
+    
+    
+    
     <!-- canvasSearch -->
     <div class="offcanvas offcanvas-end canvas-search" id="canvasSearch">
         <div class="canvas-wrapper">
@@ -1120,7 +934,7 @@
         </div>
     </div>
     <!-- /canvasSearch -->
-
+    
     <!-- toolbarShopmb -->
     <div class="offcanvas offcanvas-start canvas-mb toolbar-shop-mobile" id="toolbarShopmb">
         <span class="icon-close icon-close-popup" data-bs-dismiss="offcanvas" aria-label="Close"></span>
@@ -1312,7 +1126,7 @@
         </div>       
     </div>
     <!-- /toolbarShopmb -->
-
+    
     <!-- modal login -->
     <div class="modal modalCentered fade form-sign-in modal-part-content" id="login">
         <div class="modal-dialog modal-dialog-centered">
@@ -1421,7 +1235,7 @@
         </div>
     </div>
     <!-- /modal login -->
-
+    
     <!-- shoppingCart -->
     <div class="modal fullRight fade modal-shopping-cart" id="shoppingCart">
         <div class="modal-dialog">
@@ -1670,7 +1484,7 @@
         </div>
     </div>
     <!-- /shoppingCart -->
-
+    
     <!-- modal compare -->
     <div class="offcanvas offcanvas-bottom canvas-compare" id="compare">
         <div class="canvas-wrapper">
@@ -1725,7 +1539,7 @@
         </div>       
     </div>
     <!-- /modal compare -->
-
+    
     <!-- modal quick_add -->
     <div class="modal fade modalDemo" id="quick_add">
         <div class="modal-dialog modal-dialog-centered">
@@ -1742,345 +1556,346 @@
                             <a href="#">Ribbed Tank Top</a>
                             <div class="tf-product-info-price">
                                 <!-- <div class="price-on-sale">$8.00</div>
-                                <div class="compare-at-price">$10.00</div>
-                                <div class="badges-on-sale"><span>20</span>% OFF</div> -->
-                                <div class="price">$18.00</div>
+                                    <div class="compare-at-price">$10.00</div>
+                                    <div class="badges-on-sale"><span>20</span>% OFF</div> -->
+                                    <div class="price">$18.00</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="tf-product-info-variant-picker mb_15">
-                        <div class="variant-picker-item">
-                            <div class="variant-picker-label">
-                                Color: <span class="fw-6 variant-picker-label-value">Orange</span>
+                        <div class="tf-product-info-variant-picker mb_15">
+                            <div class="variant-picker-item">
+                                <div class="variant-picker-label">
+                                    Color: <span class="fw-6 variant-picker-label-value">Orange</span>
+                                </div>
+                                <div class="variant-picker-values">
+                                    <input id="values-orange" type="radio" name="color" checked>
+                                    <label class="hover-tooltip radius-60" for="values-orange" data-value="Orange">
+                                        <span class="btn-checkbox bg-color-orange"></span>
+                                        <span class="tooltip">Orange</span>
+                                    </label>
+                                    <input id="values-black" type="radio" name="color">
+                                    <label class=" hover-tooltip radius-60" for="values-black" data-value="Black">
+                                        <span class="btn-checkbox bg-color-black"></span>
+                                        <span class="tooltip">Black</span>
+                                    </label>
+                                    <input id="values-white" type="radio" name="color">
+                                    <label class="hover-tooltip radius-60" for="values-white" data-value="White">
+                                        <span class="btn-checkbox bg-color-white"></span>
+                                        <span class="tooltip">White</span>
+                                    </label>
+                                </div>
                             </div>
-                            <div class="variant-picker-values">
-                                <input id="values-orange" type="radio" name="color" checked>
-                                <label class="hover-tooltip radius-60" for="values-orange" data-value="Orange">
-                                    <span class="btn-checkbox bg-color-orange"></span>
-                                    <span class="tooltip">Orange</span>
-                                </label>
-                                <input id="values-black" type="radio" name="color">
-                                <label class=" hover-tooltip radius-60" for="values-black" data-value="Black">
-                                    <span class="btn-checkbox bg-color-black"></span>
-                                    <span class="tooltip">Black</span>
-                                </label>
-                                <input id="values-white" type="radio" name="color">
-                                <label class="hover-tooltip radius-60" for="values-white" data-value="White">
-                                    <span class="btn-checkbox bg-color-white"></span>
-                                    <span class="tooltip">White</span>
-                                </label>
+                            <div class="variant-picker-item">
+                                <div class="variant-picker-label">
+                                    Size: <span class="fw-6 variant-picker-label-value">S</span>
+                                </div>
+                                <div class="variant-picker-values">
+                                    <input type="radio" name="size" id="values-s" checked>
+                                    <label class="style-text" for="values-s" data-value="S">
+                                        <p>S</p>
+                                    </label>
+                                    <input type="radio" name="size" id="values-m">
+                                    <label class="style-text" for="values-m" data-value="M">
+                                        <p>M</p>
+                                    </label>
+                                    <input type="radio" name="size" id="values-l">
+                                    <label class="style-text" for="values-l" data-value="L">
+                                        <p>L</p>
+                                    </label>
+                                    <input type="radio" name="size" id="values-xl">
+                                    <label class="style-text" for="values-xl" data-value="XL">
+                                        <p>XL</p>
+                                    </label>
+                                </div>
                             </div>
                         </div>
-                        <div class="variant-picker-item">
-                            <div class="variant-picker-label">
-                                Size: <span class="fw-6 variant-picker-label-value">S</span>
-                            </div>
-                            <div class="variant-picker-values">
-                                <input type="radio" name="size" id="values-s" checked>
-                                <label class="style-text" for="values-s" data-value="S">
-                                    <p>S</p>
-                                </label>
-                                <input type="radio" name="size" id="values-m">
-                                <label class="style-text" for="values-m" data-value="M">
-                                    <p>M</p>
-                                </label>
-                                <input type="radio" name="size" id="values-l">
-                                <label class="style-text" for="values-l" data-value="L">
-                                    <p>L</p>
-                                </label>
-                                <input type="radio" name="size" id="values-xl">
-                                <label class="style-text" for="values-xl" data-value="XL">
-                                    <p>XL</p>
-                                </label>
+                        <div class="tf-product-info-quantity mb_15">
+                            <div class="quantity-title fw-6">Quantity</div>
+                            <div class="wg-quantity">
+                                <span class="btn-quantity minus-btn">-</span>
+                                <input type="text" name="number" value="1">
+                                <span class="btn-quantity plus-btn">+</span>
                             </div>
                         </div>
-                    </div>
-                    <div class="tf-product-info-quantity mb_15">
-                        <div class="quantity-title fw-6">Quantity</div>
-                        <div class="wg-quantity">
-                            <span class="btn-quantity minus-btn">-</span>
-                            <input type="text" name="number" value="1">
-                            <span class="btn-quantity plus-btn">+</span>
+                        <div class="tf-product-info-buy-button">
+                            <form class="">
+                                <a href="javascript:void(0);" class="tf-btn btn-fill justify-content-center fw-6 fs-16 flex-grow-1 animate-hover-btn btn-add-to-cart"><span>Add to cart -&nbsp;</span><span class="tf-qty-price">$18.00</span></a>
+                                <div class="tf-product-btn-wishlist btn-icon-action">
+                                    <i class="icon-heart"></i>
+                                    <i class="icon-delete"></i>
+                                </div>
+                                <a href="#compare" data-bs-toggle="offcanvas" aria-controls="offcanvasLeft" class="tf-product-btn-wishlist box-icon bg_white compare btn-icon-action">
+                                    <span class="icon icon-compare"></span>
+                                    <span class="icon icon-check"></span>
+                                </a>
+                                <div class="w-100">
+                                    <a href="#" class="btns-full">Buy with <img src="{% static 'images/payments/paypal.png' %}" alt=""></a>
+                                    <a href="#" class="payment-more-option">More payment options</a>
+                                </div>
+                            </form>
                         </div>
-                    </div>
-                    <div class="tf-product-info-buy-button">
-                        <form class="">
-                            <a href="javascript:void(0);" class="tf-btn btn-fill justify-content-center fw-6 fs-16 flex-grow-1 animate-hover-btn btn-add-to-cart"><span>Add to cart -&nbsp;</span><span class="tf-qty-price">$18.00</span></a>
-                            <div class="tf-product-btn-wishlist btn-icon-action">
-                                <i class="icon-heart"></i>
-                                <i class="icon-delete"></i>
-                            </div>
-                            <a href="#compare" data-bs-toggle="offcanvas" aria-controls="offcanvasLeft" class="tf-product-btn-wishlist box-icon bg_white compare btn-icon-action">
-                                <span class="icon icon-compare"></span>
-                                <span class="icon icon-check"></span>
-                            </a>
-                            <div class="w-100">
-                                <a href="#" class="btns-full">Buy with <img src="{% static 'images/payments/paypal.png' %}" alt=""></a>
-                                <a href="#" class="payment-more-option">More payment options</a>
-                            </div>
-                        </form>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- /modal quick_add -->
-
-    <!-- modal quick_view -->
-    <div class="modal fade modalDemo" id="quick_view">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="header">
-                    <span class="icon-close icon-close-popup" data-bs-dismiss="modal"></span>
-                </div>
-                <div class="wrap">
-                    <div class="tf-product-media-wrap">
-                        <div dir="ltr" class="swiper tf-single-slide">
-                            <div class="swiper-wrapper" >
-                                <div class="swiper-slide">
-                                    <div class="item">
-                                        <img src="{% static 'images/products/orange-1.jpg' %}" alt="">
+        <!-- /modal quick_add -->
+        
+        <!-- modal quick_view -->
+        <div class="modal fade modalDemo" id="quick_view">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="header">
+                        <span class="icon-close icon-close-popup" data-bs-dismiss="modal"></span>
+                    </div>
+                    <div class="wrap">
+                        <div class="tf-product-media-wrap">
+                            <div dir="ltr" class="swiper tf-single-slide">
+                                <div class="swiper-wrapper" >
+                                    <div class="swiper-slide">
+                                        <div class="item">
+                                            <img src="{% static 'images/products/orange-1.jpg' %}" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="swiper-slide">
+                                        <div class="item">
+                                            <img src="{% static 'images/products/pink-1.jpg' %}" alt="">
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="swiper-slide">
-                                    <div class="item">
-                                        <img src="{% static 'images/products/pink-1.jpg' %}" alt="">
+                                <div class="swiper-button-next button-style-arrow single-slide-prev"></div>
+                                <div class="swiper-button-prev button-style-arrow single-slide-next"></div>
+                            </div>
+                        </div>
+                        <div class="tf-product-info-wrap position-relative">
+                            <div class="tf-product-info-list">
+                                <div class="tf-product-info-title">
+                                    <h5><a class="link" href="#">Ribbed Tank Top</a></h5>
+                                </div>
+                                <div class="tf-product-info-badges">
+                                    <div class="badges text-uppercase">Best seller</div>
+                                    <div class="product-status-content">
+                                        <i class="icon-lightning"></i>
+                                        <p class="fw-6">Selling fast! 48 people have this in their carts.</p>
                                     </div>
+                                </div>
+                                <div class="tf-product-info-price">
+                                    <div class="price">$18.00</div>
+                                </div>
+                                <div class="tf-product-description">
+                                    <p>Nunc arcu faucibus a et lorem eu a mauris adipiscing conubia ac aptent ligula facilisis a auctor habitant parturient a a.Interdum fermentum.</p>
+                                </div>
+                                <div class="tf-product-info-variant-picker">
+                                    <div class="variant-picker-item">
+                                        <div class="variant-picker-label">
+                                            Color: <span class="fw-6 variant-picker-label-value">Orange</span>
+                                        </div>
+                                        <div class="variant-picker-values">
+                                            <input id="values-orange-1" type="radio" name="color-1" checked>
+                                            <label class="hover-tooltip radius-60" for="values-orange-1" data-value="Orange">
+                                                <span class="btn-checkbox bg-color-orange"></span>
+                                                <span class="tooltip">Orange</span>
+                                            </label>
+                                            <input id="values-black-1" type="radio" name="color-1">
+                                            <label class=" hover-tooltip radius-60" for="values-black-1" data-value="Black">
+                                                <span class="btn-checkbox bg-color-black"></span>
+                                                <span class="tooltip">Black</span>
+                                            </label>
+                                            <input id="values-white-1" type="radio" name="color-1">
+                                            <label class="hover-tooltip radius-60" for="values-white-1" data-value="White">
+                                                <span class="btn-checkbox bg-color-white"></span>
+                                                <span class="tooltip">White</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="variant-picker-item">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="variant-picker-label">
+                                                Size: <span class="fw-6 variant-picker-label-value">S</span>
+                                            </div>
+                                            <div class="find-size btn-choose-size fw-6">Find your size</div>
+                                        </div>
+                                        <div class="variant-picker-values">
+                                            <input type="radio" name="size-1" id="values-s-1" checked>
+                                            <label class="style-text" for="values-s-1" data-value="S">
+                                                <p>S</p>
+                                            </label>
+                                            <input type="radio" name="size-1" id="values-m-1">
+                                            <label class="style-text" for="values-m-1" data-value="M">
+                                                <p>M</p>
+                                            </label>
+                                            <input type="radio" name="size-1" id="values-l-1">
+                                            <label class="style-text" for="values-l-1" data-value="L">
+                                                <p>L</p>
+                                            </label>
+                                            <input type="radio" name="size-1" id="values-xl-1">
+                                            <label class="style-text" for="values-xl-1" data-value="XL">
+                                                <p>XL</p>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tf-product-info-quantity">
+                                    <div class="quantity-title fw-6">Quantity</div>
+                                    <div class="wg-quantity">
+                                        <span class="btn-quantity minus-btn">-</span>
+                                        <input type="text" name="number" value="1">
+                                        <span class="btn-quantity plus-btn">+</span>
+                                    </div>
+                                </div>
+                                <div class="tf-product-info-buy-button">
+                                    <form class="">
+                                        <a href="javascript:void(0);" class="tf-btn btn-fill justify-content-center fw-6 fs-16 flex-grow-1 animate-hover-btn btn-add-to-cart"><span>Add to cart -&nbsp;</span><span class="tf-qty-price">$8.00</span></a>
+                                        <a href="javascript:void(0);" class="tf-product-btn-wishlist hover-tooltip box-icon bg_white wishlist btn-icon-action">
+                                            <span class="icon icon-heart"></span>
+                                            <span class="tooltip">Add to Wishlist</span>
+                                            <span class="icon icon-delete"></span>
+                                        </a>
+                                        <a href="#compare" data-bs-toggle="offcanvas" aria-controls="offcanvasLeft" class="tf-product-btn-wishlist hover-tooltip box-icon bg_white compare btn-icon-action">
+                                            <span class="icon icon-compare"></span>
+                                            <span class="tooltip">Add to Compare</span>
+                                            <span class="icon icon-check"></span>
+                                        </a>
+                                        <div class="w-100">
+                                            <a href="#" class="btns-full">Buy with <img src="{% static 'images/payments/paypal.png' %}" alt=""></a>
+                                            <a href="#" class="payment-more-option">More payment options</a>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div>
+                                    <a href="#" class="tf-btn fw-6 btn-line">View full details<i class="icon icon-arrow1-top-left"></i></a>
                                 </div>
                             </div>
-                            <div class="swiper-button-next button-style-arrow single-slide-prev"></div>
-                            <div class="swiper-button-prev button-style-arrow single-slide-next"></div>
                         </div>
                     </div>
-                    <div class="tf-product-info-wrap position-relative">
-                        <div class="tf-product-info-list">
-                            <div class="tf-product-info-title">
-                                <h5><a class="link" href="#">Ribbed Tank Top</a></h5>
-                            </div>
-                            <div class="tf-product-info-badges">
-                                <div class="badges text-uppercase">Best seller</div>
-                                <div class="product-status-content">
-                                    <i class="icon-lightning"></i>
-                                    <p class="fw-6">Selling fast! 48 people have this in their carts.</p>
-                                </div>
-                            </div>
-                            <div class="tf-product-info-price">
-                                <div class="price">$18.00</div>
-                            </div>
-                            <div class="tf-product-description">
-                                <p>Nunc arcu faucibus a et lorem eu a mauris adipiscing conubia ac aptent ligula facilisis a auctor habitant parturient a a.Interdum fermentum.</p>
-                            </div>
-                            <div class="tf-product-info-variant-picker">
-                                <div class="variant-picker-item">
-                                    <div class="variant-picker-label">
-                                        Color: <span class="fw-6 variant-picker-label-value">Orange</span>
-                                    </div>
-                                    <div class="variant-picker-values">
-                                        <input id="values-orange-1" type="radio" name="color-1" checked>
-                                        <label class="hover-tooltip radius-60" for="values-orange-1" data-value="Orange">
-                                            <span class="btn-checkbox bg-color-orange"></span>
-                                            <span class="tooltip">Orange</span>
-                                        </label>
-                                        <input id="values-black-1" type="radio" name="color-1">
-                                        <label class=" hover-tooltip radius-60" for="values-black-1" data-value="Black">
-                                            <span class="btn-checkbox bg-color-black"></span>
-                                            <span class="tooltip">Black</span>
-                                        </label>
-                                        <input id="values-white-1" type="radio" name="color-1">
-                                        <label class="hover-tooltip radius-60" for="values-white-1" data-value="White">
-                                            <span class="btn-checkbox bg-color-white"></span>
-                                            <span class="tooltip">White</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="variant-picker-item">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="variant-picker-label">
-                                            Size: <span class="fw-6 variant-picker-label-value">S</span>
-                                        </div>
-                                        <div class="find-size btn-choose-size fw-6">Find your size</div>
-                                    </div>
-                                    <div class="variant-picker-values">
-                                        <input type="radio" name="size-1" id="values-s-1" checked>
-                                        <label class="style-text" for="values-s-1" data-value="S">
-                                            <p>S</p>
-                                        </label>
-                                        <input type="radio" name="size-1" id="values-m-1">
-                                        <label class="style-text" for="values-m-1" data-value="M">
-                                            <p>M</p>
-                                        </label>
-                                        <input type="radio" name="size-1" id="values-l-1">
-                                        <label class="style-text" for="values-l-1" data-value="L">
-                                            <p>L</p>
-                                        </label>
-                                        <input type="radio" name="size-1" id="values-xl-1">
-                                        <label class="style-text" for="values-xl-1" data-value="XL">
-                                            <p>XL</p>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tf-product-info-quantity">
-                                <div class="quantity-title fw-6">Quantity</div>
-                                <div class="wg-quantity">
-                                    <span class="btn-quantity minus-btn">-</span>
-                                    <input type="text" name="number" value="1">
-                                    <span class="btn-quantity plus-btn">+</span>
-                                </div>
-                            </div>
-                            <div class="tf-product-info-buy-button">
-                                <form class="">
-                                    <a href="javascript:void(0);" class="tf-btn btn-fill justify-content-center fw-6 fs-16 flex-grow-1 animate-hover-btn btn-add-to-cart"><span>Add to cart -&nbsp;</span><span class="tf-qty-price">$8.00</span></a>
-                                    <a href="javascript:void(0);" class="tf-product-btn-wishlist hover-tooltip box-icon bg_white wishlist btn-icon-action">
-                                        <span class="icon icon-heart"></span>
-                                        <span class="tooltip">Add to Wishlist</span>
-                                        <span class="icon icon-delete"></span>
-                                    </a>
-                                    <a href="#compare" data-bs-toggle="offcanvas" aria-controls="offcanvasLeft" class="tf-product-btn-wishlist hover-tooltip box-icon bg_white compare btn-icon-action">
-                                        <span class="icon icon-compare"></span>
-                                        <span class="tooltip">Add to Compare</span>
-                                        <span class="icon icon-check"></span>
-                                    </a>
-                                    <div class="w-100">
-                                        <a href="#" class="btns-full">Buy with <img src="{% static 'images/payments/paypal.png' %}" alt=""></a>
-                                        <a href="#" class="payment-more-option">More payment options</a>
-                                    </div>
-                                </form>
+                </div>
+            </div>
+        </div>
+        <!-- /modal quick_view -->
+        
+        <!-- modal find_size -->
+        <div class="modal fade modalDemo tf-product-modal" id="find_size">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="header">
+                        <div class="demo-title">Size chart</div>
+                        <span class="icon-close icon-close-popup" data-bs-dismiss="modal"></span>
+                    </div>
+                    <div class="tf-rte">
+                        <div class="tf-table-res-df">
+                            <h6>Size guide</h6>
+                            <table class="tf-sizeguide-table">
+                                <thead>
+                                    <tr>
+                                        <th>Size</th>
+                                        <th>US</th>
+                                        <th>Bust</th>
+                                        <th>Waist</th>
+                                        <th>Low Hip</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>XS</td>
+                                        <td>2</td>
+                                        <td>32</td>
+                                        <td>24 - 25</td>
+                                        <td>33 - 34</td>
+                                    </tr>
+                                    <tr>
+                                        <td>S</td>
+                                        <td>4</td>
+                                        <td>34 - 35</td>
+                                        <td>26 - 27</td>
+                                        <td>35 - 26</td>
+                                    </tr>
+                                    <tr>
+                                        <td>M</td>
+                                        <td>6</td>
+                                        <td>36 - 37</td>
+                                        <td>28 - 29</td>
+                                        <td>38 - 40</td>
+                                    </tr>
+                                    <tr>
+                                        <td>L</td>
+                                        <td>8</td>
+                                        <td>38 - 29</td>
+                                        <td>30 - 31</td>
+                                        <td>42 - 44</td>
+                                    </tr>
+                                    <tr>
+                                        <td>XL</td>
+                                        <td>10</td>
+                                        <td>40 - 41</td>
+                                        <td>32 - 33</td>
+                                        <td>45 - 47</td>
+                                    </tr>
+                                    <tr>
+                                        <td>XXL</td>
+                                        <td>12</td>
+                                        <td>42 - 43</td>
+                                        <td>34 - 35</td>
+                                        <td>48 - 50</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tf-page-size-chart-content">
+                            <div>
+                                <h6>Measuring Tips</h6>
+                                <div class="title">Bust</div>
+                                <p>Measure around the fullest part of your bust.</p>
+                                <div class="title">Waist</div>
+                                <p>Measure around the narrowest part of your torso.</p>
+                                <div class="title">Low Hip</div>
+                                <p class="mb-0">With your feet together measure around the fullest part of your hips/rear.
+                                </p>
                             </div>
                             <div>
-                                <a href="#" class="tf-btn fw-6 btn-line">View full details<i class="icon icon-arrow1-top-left"></i></a>
+                                <img class="sizechart lazyload" data-src="{% static 'images/shop/products/size_chart2.jpg' %}" src="{% static 'images/shop/products/size_chart2.jpg' %}" alt="">
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- /modal quick_view -->
-
-    <!-- modal find_size -->
-    <div class="modal fade modalDemo tf-product-modal" id="find_size">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="header">
-                    <div class="demo-title">Size chart</div>
-                    <span class="icon-close icon-close-popup" data-bs-dismiss="modal"></span>
-                </div>
-                <div class="tf-rte">
-                    <div class="tf-table-res-df">
-                        <h6>Size guide</h6>
-                        <table class="tf-sizeguide-table">
-                            <thead>
-                                <tr>
-                                    <th>Size</th>
-                                    <th>US</th>
-                                    <th>Bust</th>
-                                    <th>Waist</th>
-                                    <th>Low Hip</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>XS</td>
-                                    <td>2</td>
-                                    <td>32</td>
-                                    <td>24 - 25</td>
-                                    <td>33 - 34</td>
-                                </tr>
-                                <tr>
-                                    <td>S</td>
-                                    <td>4</td>
-                                    <td>34 - 35</td>
-                                    <td>26 - 27</td>
-                                    <td>35 - 26</td>
-                                </tr>
-                                <tr>
-                                    <td>M</td>
-                                    <td>6</td>
-                                    <td>36 - 37</td>
-                                    <td>28 - 29</td>
-                                    <td>38 - 40</td>
-                                </tr>
-                                <tr>
-                                    <td>L</td>
-                                    <td>8</td>
-                                    <td>38 - 29</td>
-                                    <td>30 - 31</td>
-                                    <td>42 - 44</td>
-                                </tr>
-                                <tr>
-                                    <td>XL</td>
-                                    <td>10</td>
-                                    <td>40 - 41</td>
-                                    <td>32 - 33</td>
-                                    <td>45 - 47</td>
-                                </tr>
-                                <tr>
-                                    <td>XXL</td>
-                                    <td>12</td>
-                                    <td>42 - 43</td>
-                                    <td>34 - 35</td>
-                                    <td>48 - 50</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="tf-page-size-chart-content">
-                        <div>
-                            <h6>Measuring Tips</h6>
-                            <div class="title">Bust</div>
-                            <p>Measure around the fullest part of your bust.</p>
-                            <div class="title">Waist</div>
-                            <p>Measure around the narrowest part of your torso.</p>
-                            <div class="title">Low Hip</div>
-                            <p class="mb-0">With your feet together measure around the fullest part of your hips/rear.
-                            </p>
-                        </div>
-                        <div>
-                            <img class="sizechart lazyload" data-src="{% static 'images/shop/products/size_chart2.jpg' %}" src="{% static 'images/shop/products/size_chart2.jpg' %}" alt="">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- /modal find_size -->
-
-
-    <!-- Javascript -->
-    <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/swiper-bundle.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/carousel.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/bootstrap-select.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/lazysize.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/bootstrap-select.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/count-down.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/wow.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/multiple-modal.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
-    
-    {% comment %} plugins {% endcomment %}
-    <script src="{% static 'js/sweetalert2/11.6.5/sweetalert2.all.min.js' %}"></script>
-    <script src="{% static 'js/htmx.min.js' %} "></script>
-    <script src="{% static 'js/dialog.js' %}"></script>
-    <script src="{% static 'js/toast.js' %}"></script>
-    <!-- Datatables  -->
-    <script src="{% static 'lib/datatables/datatables.min.js' %}"></script>
-
-    {% block js_perso %}
-    
+        <!-- /modal find_size -->
+        
+        
+        <!-- Javascript -->
+        <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/swiper-bundle.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/carousel.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/bootstrap-select.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/lazysize.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/bootstrap-select.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/count-down.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/wow.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/multiple-modal.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+        
+        {% comment %} plugins {% endcomment %}
+        <script src="{% static 'js/sweetalert2/11.6.5/sweetalert2.all.min.js' %}"></script>
+        <script src="{% static 'js/htmx.min.js' %} "></script>
+        <script src="{% static 'js/dialog.js' %}"></script>
+        <script src="{% static 'js/toast.js' %}"></script>
+        <script src="{% static 'js/cart.js' %}"></script>
+        <!-- Datatables  -->
+        <script src="{% static 'lib/datatables/datatables.min.js' %}"></script>
+        
+        {% block js_perso %}
+        
         <script>
             $(document).ready( function () {
                 $('#myTable').DataTable();
             } );
         </script>
         
-    {% endblock js_perso %}
+        {% endblock js_perso %}
         
+        
+        {% load sweetify %}
+        {% sweetify %}
+    </body>
     
-    {% load sweetify %}
-    {% sweetify %}
-</body>
-
-</html>
+    </html>

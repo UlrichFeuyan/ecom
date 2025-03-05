@@ -6,7 +6,7 @@ from products.forms import ProductForm, ProductImageFormSet
 from products.models import Category, Product, ProductImage
 from django.http import JsonResponse
 from django.db import transaction
-from store.utils import cookieCart, cartData, guestOrder
+from products.utils import cookieCart, cartData, guestOrder
 import json
 import datetime
 
@@ -142,7 +142,7 @@ def processOrder(request):
 def listing(request):
     products = Product.objects.filter(available=True)
     categories = Category.objects.all()
-    paginator = Paginator(products, 3)
+    paginator = Paginator(products, 5)
 
     page_num = request.GET.get('page')
     try:

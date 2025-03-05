@@ -83,23 +83,18 @@
                                     {% endif %}
                                 </a>
                                 <div class="list-product-btn absolute-2">
-                                    <a href="#quick_add" data-bs-toggle="modal" class="box-icon bg_white quick-add tf-btn-loading">
+                                    <div data-product="{{ product.id }}" data-action="add" class="box-icon bg_white quick-add tf-btn-loading update-cart">
                                         <span class="icon icon-bag"></span>
-                                        <span class="tooltip">Quick Add</span>
-                                    </a>
+                                        <span class="tooltip">Ajouter au panier</span>
+                                    </div>
                                     <a href="javascript:void(0);" class="box-icon bg_white wishlist btn-icon-action">
                                         <span class="icon icon-heart"></span>
                                         <span class="tooltip">Add to Wishlist</span>
                                         <span class="icon icon-delete"></span>
                                     </a>
-                                    <a href="#compare" data-bs-toggle="offcanvas" aria-controls="offcanvasLeft" class="box-icon bg_white compare btn-icon-action">
-                                        <span class="icon icon-compare"></span>
-                                        <span class="tooltip">Add to Compare</span>
-                                        <span class="icon icon-check"></span>
-                                    </a>
                                     <a href="#quick_view" data-bs-toggle="modal" class="box-icon bg_white quickview tf-btn-loading">
                                         <span class="icon icon-view"></span>
-                                        <span class="tooltip">Quick View</span>
+                                        <span class="tooltip">Prévisualiser</span>
                                     </a>
                                 </div>
                             </div>
@@ -122,25 +117,7 @@
                     {% endfor %}
                 </div>
                 <!-- pagination -->
-                <ul class="tf-pagination-wrap tf-pagination-list tf-pagination-btn">
-                    <li class="active">
-                        <a href="#" class="pagination-link">1</a>
-                    </li>
-                    <li>
-                        <a href="#" class="pagination-link animate-hover-btn">2</a>
-                    </li>
-                    <li>
-                        <a href="#" class="pagination-link animate-hover-btn">3</a>
-                    </li>
-                    <li>
-                        <a href="#" class="pagination-link animate-hover-btn">4</a>
-                    </li>
-                    <li>
-                        <a href="#" class="pagination-link animate-hover-btn">
-                            <span class="icon icon-arrow-right"></span>
-                        </a>
-                    </li>
-                </ul>
+                {% include "pagination.html" %}
             </div>
             
         </div>

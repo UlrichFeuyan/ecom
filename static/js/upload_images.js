@@ -1,4 +1,5 @@
 function ImgUpload() {
+    console.log("dans l'image uplaod js !!!!!")
     let imgWrap = document.querySelector(".upload__img-wrap");
     let inputFile = document.querySelector(".upload__inputfile");
     let imgArray = [];

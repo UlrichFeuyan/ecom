@@ -57,7 +57,7 @@ def login_user(request):
             return redirect("home")
         else:
             message = "Nom d'utilisateur ou mot de passe incorrect."
-            sweetify.info(request, message, timer=3000, confirmButtonText="OK", timerProgressBar=True, position="top")
+            sweetify.info(request, message, timer=2000, toast=True, timerProgressBar=True, position="top")
             return render(request, "accounts/login.html", locals())
     else:
         form = LoginForm()
@@ -81,7 +81,7 @@ def profil(request):
             # Mettre à jour la session pour éviter de déconnecter l'utilisateur
             update_session_auth_hash(request, user)
             messages="Votre profil a été mis à jour avec succès !"
-            sweetify.info(request, message, timer=3000, confirmButtonText="OK", timerProgressBar=True, position="top")
+            sweetify.info(request, message, timer=2000, toast=True, timerProgressBar=True, position="top")
             return redirect('accounts:profil')
     else:
         form = ProfileForm(instance=request.user)

@@ -1,8 +1,13 @@
 {% extends 'gestion_base.html' %}
 {% load static %}
 
-{% block css_perso %}    
+{% block css_perso %}
+    <link rel="stylesheet" href="{% static 'lib/multi/multi.min.css' %}">
+    
     <style>
+        select[multiple] {
+            display: none !important; /* Masque le select natif */
+        }
         html * {
             box-sizing: border-box;
         }
@@ -39,7 +44,7 @@
             border: 2px solid #61b482;
             background-color: #61b482;
             border-radius: 10px;
-            line-height: 26px;
+            line-height: 1px;
             font-size: 14px;
         }
         
@@ -121,6 +126,7 @@
             max-width: 200px; /* Ajuste selon tes besoins */
         }
     </style>
+
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <div class="row">
@@ -190,20 +196,20 @@
                     { 
                         "data": "first_image",
                         "render": function (data) {
-                            return `<img src="${data}" alt="Image" width="150">`;
+                            return `<img src="${data || '/static/images/placeholder.png'}" alt="Image" width="150">`;
                         }
                     },
-                    { "data": "name" },
-                    { "data": "category_name" },
-                    { "data": "marque_name" },
+                    { "data": "name", "defaultContent": "Sans nom" },
+                    { "data": "category_name", "defaultContent": "Non catégorisé" },
+                    { "data": "marque_name", "defaultContent": "Sans marque" },
                     { 
                         "data": "tags",
                         "render": function (data) {
-                            return data.length > 0 ? data.join(', ') : "Aucun";
+                            return data.length > 0 ? data.join(', ') : "Aucun Tag";
                         }
                     },
-                    { "data": "price" },
-                    { "data": "stock" },
+                    { "data": "price", "defaultContent": "-" },
+                    { "data": "stock", "defaultContent": "-" },
                     { 
                         "data": "id",
                         "render": function (data) {
@@ -218,7 +224,7 @@
                 "paging": true,
                 "pagingType": "simple_numbers",
                 "lengthChange": true,
-                "lengthMenu": [ [5, 10, 25, 50, -1], [5, 10, 25, 50, "Tous"] ],
+                "lengthMenu": [ [3, 10, 25, 50, -1], [5, 10, 25, 50, "Tous"] ],
                 "searching": true,
                 "ordering": false,
                 "info": true,
@@ -250,9 +256,107 @@
         });
     </script>
     <script src="{% static 'js/upload_images.js' %}"></script>
+    <script src="{% static 'lib/multi/multi.min.js' %} "></script>
     <script>
-        document.getElementById('bouton_ajout_produit').addEventListener('htmx:afterSwap', function() {
-            ImgUpload();
+        document.body.addEventListener('htmx:afterSwap', function(event) {
+            if (event.target.id === "dialog_add_product") {  // Vérifie que c'est bien la modal qui est mise à jour
+                console.log("Modal injectée, activation du slug auto");
+        
+                let nameInput = document.getElementById("id_name");
+                let slugInput = document.getElementById("id_slug");
+        
+                if (!nameInput || !slugInput) {
+                    console.error("Champs name/slug introuvables !");
+                    return;
+                }
+        
+                // Empêcher les doublons en supprimant d'abord l'ancien event listener
+                nameInput.removeEventListener("input", updateSlug);
+                nameInput.addEventListener("input", updateSlug);
+            }
         });
+        
+        // Fonction de génération du slug
+        function updateSlug() {
+            let nameInput = document.getElementById("id_name");
+            let slugInput = document.getElementById("id_slug");
+        
+            function slugify(text) {
+                return text.toString().toLowerCase()
+                    .trim()
+                    .replace(/\s+/g, '-')           
+                    .replace(/[^\w\-]+/g, '')        
+                    .replace(/\-\-+/g, '-')         
+                    .replace(/^-+/, '')             
+                    .replace(/-+$/, '');            
+            }
+        
+            let slug = slugify(nameInput.value);
+            slugInput.value = slug;
+        
+            // Vérification du slug côté serveur
+            if (slug) {
+                fetch(`/products/check-slug/?name=${encodeURIComponent(nameInput.value)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        slugInput.value = data.slug;
+                    });
+            }
+        }
+
+        document.body.addEventListener('htmx:afterSwap', function(event) {
+            if (event.target.id === "dialog_add_product") {
+                console.log("Initialisation du multi-select");
+        
+                let select = document.getElementById("id_tag");
+        
+                // Vérifie si le multi-select a déjà été initialisé
+                if (select.dataset.multiInitialized) {
+                    console.log("Réinitialisation du multi-select...");
+                    
+                    // Supprimer le multi-select existant (le conteneur stylisé)
+                    let multiContainer = select.closest('.multi-wrapper');
+                    if (multiContainer) {
+                        multiContainer.remove(); 
+                    }
+        
+                    // Supprime tous les events liés à l'ancien select
+                    select.outerHTML = select.outerHTML;
+                    select = document.getElementById("id_tag"); // Reprendre la nouvelle instance DOM
+                }
+        
+                // Appliquer le multi-select
+                multi(select, {
+                    non_selected_header: "Disponibles",
+                    search_placeholder: "Rechercher un tag ...",
+                    selected_header: "Sélectionnés",
+                    limit: 5,
+                    limit_reached: function () {
+                        alert('Vous avez sélectionné 5/5 éléments.');
+                    }
+                });
+        
+                // Marquer comme initialisé
+                select.dataset.multiInitialized = true;
+            }
+        });
+        
+        
+        document.body.addEventListener('hidden.bs.modal', function(event) {
+            if (event.target.id === "add_product") {
+                console.log("Nettoyage des événements à la fermeture de la modal");
+        
+                let nameInput = document.getElementById("id_name");
+                if (nameInput) {
+                    nameInput.removeEventListener("input", updateSlug);
+                }
+        
+                let select = document.getElementById("id_tag");
+                if (select) {
+                    delete select.dataset.multiInitialized;  // Réinitialise le flag d'initialisation
+                }
+            }
+        });
+        
     </script>
 {% endblock js_perso %}

@@ -12,7 +12,7 @@
                         </a>
                     </div>
                     <div class="col-md-4 col-6">
-                        <a href="#" class="logo-header">
+                        <a href="{% url 'home' %}" class="logo-header">
                             <img src="{% static 'images/logo/logo-blue2.svg' %}" alt="logo" class="logo">
                         </a>
                     </div>
@@ -49,7 +49,7 @@
                             {% endif %}
                             {% comment %} <li class="nav-wishlist"><a href="#" class="nav-icon-item  align-items-center gap-10"><i class="icon icon-heart"></i><span class="text">Wishlist</span></a></li> {% endcomment %}
                             <li class="nav-cart cart-lg">
-                                <a href="#shoppingCart" data-bs-toggle="modal" class="nav-icon-item"><i class="icon icon-bag"></i><span class="count-box">6</span></a>
+                                <a href="{% url 'orders:cart' %}" class="nav-icon-item"><i class="icon icon-bag"></i><span class="count-box">{% if cartItems %}{{ cartItems }}{% else %}0{% endif %}</span></a>
                             </li>
                         </ul>
                     </div>
@@ -63,200 +63,33 @@
                         <div class="tf-list-categories">
                             <a href="#" class="categories-title">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M4.83416 0H1.61897C0.726277 0 0 0.726277 0 1.61897V4.83416C0 5.72685 0.726277 6.45312 1.61897 6.45312H4.83416C5.72685 6.45312 6.45312 5.72685 6.45312 4.83416V1.61897C6.45312 0.726277 5.72685 0 4.83416 0ZM5.35938 4.83416C5.35938 5.12375 5.12375 5.35938 4.83416 5.35938H1.61897C1.32937 5.35938 1.09375 5.12375 1.09375 4.83416V1.61897C1.09375 1.32937 1.32937 1.09375 1.61897 1.09375H4.83416C5.12375 1.09375 5.35938 1.32937 5.35938 1.61897V4.83416ZM12.3594 0H9.1875C8.28286 0 7.54688 0.735984 7.54688 1.64062V4.8125C7.54688 5.71714 8.28286 6.45312 9.1875 6.45312H12.3594C13.264 6.45312 14 5.71714 14 4.8125V1.64062C14 0.735984 13.264 0 12.3594 0ZM12.9062 4.8125C12.9062 5.11405 12.6609 5.35938 12.3594 5.35938H9.1875C8.88595 5.35938 8.64062 5.11405 8.64062 4.8125V1.64062C8.64062 1.33908 8.88595 1.09375 9.1875 1.09375H12.3594C12.6609 1.09375 12.9062 1.33908 12.9062 1.64062V4.8125ZM4.83416 7.54688H1.61897C0.726277 7.54688 0 8.27315 0 9.16584V12.381C0 13.2737 0.726277 14 1.61897 14H4.83416C5.72685 14 6.45312 13.2737 6.45312 12.381V9.16584C6.45312 8.27315 5.72685 7.54688 4.83416 7.54688ZM5.35938 12.381C5.35938 12.6706 5.12375 12.9062 4.83416 12.9062H1.61897C1.32937 12.9062 1.09375 12.6706 1.09375 12.381V9.16584C1.09375 8.87625 1.32937 8.64062 1.61897 8.64062H4.83416C5.12375 8.64062 5.35938 8.87625 5.35938 9.16584V12.381ZM12.3594 7.54688H9.1875C8.28286 7.54688 7.54688 8.28286 7.54688 9.1875V12.3594C7.54688 13.264 8.28286 14 9.1875 14H12.3594C13.264 14 14 13.264 14 12.3594V9.1875C14 8.28286 13.264 7.54688 12.3594 7.54688ZM12.9062 12.3594C12.9062 12.6609 12.6609 12.9062 12.3594 12.9062H9.1875C8.88595 12.9062 8.64062 12.6609 8.64062 12.3594V9.1875C8.64062 8.88595 8.88595 8.64062 9.1875 8.64062H12.3594C12.6609 8.64062 12.9062 8.88595 12.9062 9.1875V12.3594Z" fill="currentColor"></path></svg>
-                                Browse All Categories
+                                Liste Des Catégories
                             </a>
                             <div class="list-categories-inner toolbar-shop-mobile">
                                 <ul class="nav-ul-mb" id="wrapper-menu-navigation">
-                                    <li class="nav-mb-item">
-                                        <a href="#" class="tf-category-link mb-menu-link">
-                                            <div class="image">
-                                                <img src="{% static 'images/shop/cate/cate1.jpg' %}" alt="">
-                                            </div>
-                                            <span class="link">Accessories</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-mb-item">
-                                        <a href="#" class="tf-category-link mb-menu-link">
-                                            <div class="image">
-                                                <img src="{% static 'images/shop/cate/cate2.jpg' %}" alt="">
-                                            </div>
-                                            <span class="link">Dog</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-mb-item">
-                                        <a href="#" class="tf-category-link mb-menu-link">
-                                            <div class="image">
-                                                <img src="{% static 'images/shop/cate/cate3.jpg' %}" alt="">
-                                            </div>
-                                            <span class="link">Grocery</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-mb-item">
-                                        <a href="#" class="tf-category-link mb-menu-link">
-                                            <div class="image">
-                                                <img src="{% static 'images/shop/cate/cate4.png' %}" alt="">
-                                            </div>
-                                            <span class="link">Handbag</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-mb-item">
-                                        <a href="#cate-menu-one" class="tf-category-link has-children collapsed mb-menu-link" data-bs-toggle="collapse" aria-expanded="true" aria-controls="cate-menu-one">
-                                            <div class="image">
-                                                <img src="{% static 'images/shop/cate/cate5.jpg' %}" alt="">
-                                            </div>
-                                            <span class="link">Fashion</span>
-                                            <span class="btn-open-sub"></span>
-                                        </a>
-                                        <div id="cate-menu-one" class="collapse list-cate">
-                                            <ul class="sub-nav-menu" id="cate-menu-navigation">
-                                                <li>
-                                                    <a href="#cate-shop-one" class="tf-category-link has-children sub-nav-link collapsed"  data-bs-toggle="collapse" aria-expanded="true" aria-controls="cate-shop-one">
-                                                        <div class="image">
-                                                            <img src="{% static 'images/shop/cate/cate6.jpg' %}" alt="">
-                                                        </div>
-                                                        <span>Mens</span>
-                                                        <span class="btn-open-sub"></span>
-                                                    </a>
-                                                    <div id="cate-shop-one" class="collapse">
-                                                        <ul class="sub-nav-menu sub-menu-level-2">
-                                                            <li>
-                                                                <a href="#" class="tf-category-link sub-nav-link">
-                                                                    <div class="image">
-                                                                        <img src="{% static 'images/shop/cate/cate1.jpg' %}" alt="">
-                                                                    </div>
-                                                                    <span>Accessories</span>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#" class="tf-category-link sub-nav-link">
-                                                                    <div class="image">
-                                                                        <img src="{% static 'images/shop/cate/cate8.jpg' %}" alt="">
-                                                                    </div>
-                                                                    <span>Shoes</span>
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <a href="#cate-shop-two" class="tf-category-link has-children sub-nav-link collapsed"  data-bs-toggle="collapse" aria-expanded="true" aria-controls="cate-shop-two">
-                                                        <div class="image">
-                                                            <img src="{% static 'images/shop/cate/cate9.jpg' %}" alt="">
-                                                        </div>
-                                                        <span>Womens</span>
-                                                        <span class="btn-open-sub"></span>
-                                                    </a>
-                                                    <div id="cate-shop-two" class="collapse">
-                                                        <ul class="sub-nav-menu sub-menu-level-2">
-                                                            <li>
-                                                                <a href="#" class="tf-category-link sub-nav-link">
-                                                                    <div class="image">
-                                                                        <img src="{% static 'images/shop/cate/cate4.png' %}" alt="">
-                                                                    </div>
-                                                                    <span>Handbag</span>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#" class="tf-category-link sub-nav-link">
-                                                                    <div class="image">
-                                                                        <img src="{% static 'images/shop/cate/cate7.jpg' %}" alt="">
-                                                                    </div>
-                                                                    <span>Tee</span>
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                    <li class="nav-mb-item">
-                                        <a href="#cate-menu-two" class="tf-category-link has-children collapsed mb-menu-link" data-bs-toggle="collapse" aria-expanded="true" aria-controls="cate-menu-two">
-                                            <div class="image">
-                                                <img src="{% static 'images/shop/cate/cate6.jpg' %}" alt="">
-                                            </div>
-                                            <span class="link">Men</span>
-                                            <span class="btn-open-sub"></span>
-                                        </a>
-                                        <div id="cate-menu-two" class="collapse list-cate">
-                                            <ul class="sub-nav-menu" id="cate-menu-navigation1">
-                                                <li>
-                                                    <a href="#" class="tf-category-link sub-nav-link">
-                                                        <div class="image">
-                                                            <img src="{% static 'images/shop/cate/cate1.jpg' %}" alt="">
-                                                        </div>
-                                                        <span>Accessories</span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" class="tf-category-link sub-nav-link">
-                                                        <div class="image">
-                                                            <img src="{% static 'images/shop/cate/cate8.jpg' %}" alt="">
-                                                        </div>
-                                                        <span>Shoes</span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                    <li class="nav-mb-item">
-                                        <a href="#" class="tf-category-link mb-menu-link">
-                                            <div class="image">
-                                                <img src="{% static 'images/shop/cate/cate7.jpg' %}" alt="">
-                                            </div>
-                                            <span class="link">Tee</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-mb-item">
-                                        <a href="#" class="tf-category-link mb-menu-link">
-                                            <div class="image">
-                                                <img src="{% static 'images/shop/cate/cate8.jpg' %}" alt="">
-                                            </div>
-                                            <span class="link">Shoes</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-mb-item">
-                                        <a href="#cate-menu-three" class="tf-category-link has-children collapsed mb-menu-link" data-bs-toggle="collapse" aria-expanded="true" aria-controls="cate-menu-three">
-                                            <div class="image">
-                                                <img src="{% static 'images/shop/cate/cate9.jpg' %}" alt="">
-                                            </div>
-                                            <span class="link">Women</span>
-                                            <span class="btn-open-sub"></span>
-                                        </a>
-                                        <div id="cate-menu-three" class="collapse list-cate">
-                                            <ul class="sub-nav-menu" id="cate-menu-navigation2">
-                                                <li>
-                                                    <a href="#" class="tf-category-link sub-nav-link">
-                                                        <div class="image">
-                                                            <img src="{% static 'images/shop/cate/cate4.png' %}" alt="">
-                                                        </div>
-                                                        <span>Handbag</span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" class="tf-category-link sub-nav-link">
-                                                        <div class="image">
-                                                            <img src="{% static 'images/shop/cate/cate7.jpg' %}" alt="">
-                                                        </div>
-                                                        <span>Tee</span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </li>
+                                    {% for category in categories %}    
+                                        <li class="nav-mb-item">
+                                            <a href="#" class="tf-category-link mb-menu-link">
+                                                <div class="image">
+                                                    <img src="{{ category.image.url }}" alt="{{ category.name }}">
+                                                </div>
+                                                <span class="link">{{ category.name }}</span>
+                                            </a>
+                                        </li>
+                                    {% endfor %}
                                 </ul>
                                 <div class="categories-bottom">
-                                    <a href="#" class="tf-btn btn-line collection-other-link"><span>View all collection</span><i class="icon icon-arrow1-top-left"></i></a>
+                                    <a href="#" class="tf-btn btn-line collection-other-link"><span>Toutes les Accessories</span><i class="icon icon-arrow1-top-left"></i></a>
                                 </div>
                             </div>
                         </div>
                         <nav class="box-navigation text-center">
                             <ul class="box-nav-ul d-flex align-items-center justify-content-center gap-30">
                                 <li class="menu-item"><a href="{% url 'home' %}" class="item-link">Accueil</a></li>
-                                <li class="menu-item"><a href="{% url 'products:list' %}" class="item-link">Store</a></li>
-                                <li class="menu-item"><a href="#" class="item-link">produits</a></li>
-                                <li class="menu-item"><a href="#" class="item-link">Contact</a></li>
-                                <li class="menu-item"><a href="#" class="item-link">FAQ</a></li>
+                                <li class="menu-item"><a href="{% url 'products:list' %}" class="item-link">Boutique</a></li>
+                                <li class="menu-item"><a href="{% url 'products:products' %}" class="item-link">produits</a></li>
+                                <li class="menu-item"><a href="{% url 'contact' %}" class="item-link">Contact</a></li>
+                                <li class="menu-item"><a href="{% url 'faq' %}" class="item-link">FAQ</a></li>
                             </ul>
                         </nav>
                     </div>
@@ -270,7 +103,7 @@
                         </div>
                         <div class="number d-grid">
                             <a href="tel:1900100888" class="phone">1900100888</a>
-                            <span class="fw-5 text">Support Center</span>
+                            <span class="fw-5 text">Centre d'Assistance</span>
                         </div>
                     </div>
                 </div>

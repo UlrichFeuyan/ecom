@@ -3,6 +3,7 @@ from django.contrib.admin.widgets import RelatedFieldWidgetWrapper, AdminFileWid
 from products.models import ProductImage, Product, Marque, Category, Tag
 from django.utils.translation import gettext_lazy as _
 from ckeditor.fields import RichTextFormField
+from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from django.urls import reverse
 from datetime import datetime
 
@@ -32,6 +33,7 @@ class ProductForm(ModelForm):
         required=False,
         label=_("Tags")
     )
+    description = CharField(widget=CKEditorUploadingWidget())
 
     class Meta:
 
@@ -56,7 +58,6 @@ class ProductForm(ModelForm):
             'category': Select(attrs={'class': 'tf-select w-100'}),
             'marque': Select(attrs={'class': 'tf-select w-100'}),
             'stock': NumberInput(attrs={'class': 'tf-field-input tf-input', 'min': 0}),
-            'description': Textarea(attrs={'class': 'tf-field-input tf-input', 'rows': 4}),
         }
 
 

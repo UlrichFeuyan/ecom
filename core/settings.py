@@ -38,6 +38,10 @@ SECRET_KEY = env("SECRET_KEY", default="django-insecure-*@-s238f%w(p7xc*uu)!nxgn
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG", default=True)
 
+# 🔹 Sécurité
+# CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=["localhost", "127.0.0.1"]) 
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
 
 # Application definition
@@ -62,19 +66,19 @@ INSTALLED_APPS = [
     'sweetify',
 
     'rest_framework',
-    # 'rest_framework.authtoken',
+    'rest_framework.authtoken',
     'rest_framework_datatables',
     # 'rest_auth',
     
-    # 'allauth',
-    # 'allauth.account',
-    # 'allauth.socialaccount',
-    # 'allauth.socialaccount.providers.google',
-    # 'allauth.socialaccount.providers.facebook',
-    # 'allauth.socialaccount.providers.apple',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.apple',
 
-    # 'dj_rest_auth',
-    # 'dj_rest_auth.registration',
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
 
 
     ## Internes
@@ -90,6 +94,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -112,6 +117,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'orders.context_processors.cart_context',
             ],
         },
     },
@@ -163,17 +169,17 @@ SWEETIFY_SWEETALERT_LIBRARY = 'sweetalert2'
 SITE_ID = 1
 
 # # Configuration allauth
-# ACCOUNT_EMAIL_REQUIRED = True
-# ACCOUNT_USERNAME_REQUIRED = False
-# ACCOUNT_AUTHENTICATION_METHOD = 'email'
-# ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
 # Rediriger après l'inscription/connexion
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 # Configuration de dj-rest-auth
-# REST_USE_JWT = True
+REST_USE_JWT = True
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
@@ -185,21 +191,9 @@ REST_FRAMEWORK = {
         'rest_framework_datatables.filters.DatatablesFilterBackend',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework_datatables.pagination.DatatablesPageNumberPagination',
-    'PAGE_SIZE': 50,
+    'PAGE_SIZE': 5,
 }
 
-
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': [
-            'profile',
-            'email',
-        ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        },
-    }
-}
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
@@ -218,8 +212,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = "djofangulrich05@gmail.com" # sender's email-id
-EMAIL_HOST_PASSWORD = "khli jnrd otqh knki" # password associated with above email-id (not the regular password)
+EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="djofangulrich05@gmail.com")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="khli jnrd otqh knki")
+
 
 # Logging config
 # LOGGING = {
@@ -235,13 +230,20 @@ EMAIL_HOST_PASSWORD = "khli jnrd otqh knki" # password associated with above ema
 #############################
 
 CKEDITOR_JQUERY_URL = 'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js'
-
-CKEDITOR_UPLOAD_PATH = 'uploads/'
-CKEDITOR_IMAGE_BACKEND = "pillow"
+CKEDITOR_UPLOAD_PATH = "uploads/ck_editor/"
+CKEDITOR_RESTRICT_BY_USER = False
+CKEDITOR_REQUIRE_STAFF = False
+CKEDITOR_ALLOW_NONIMAGE_FILES = False
 
 CKEDITOR_CONFIGS = {
     'default': {
-        'toolbar': None,
+        'toolbar': 'full',
+        'uploadUrl': '/ckeditor/upload/',
+        'filebrowserUploadUrl': '/ckeditor/upload/',
+        'imageUploadUrl': '/ckeditor/upload/',
+        'startupFocus': True,
+        'height': 300,
+        'width': "100%",
     },
 }
 
@@ -273,6 +275,7 @@ STATIC_ROOT = env.str("STATIC_ROOT", default=os.path.join(BASE_DIR, 'staticfiles
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
 STATIC_URL = env.str("STATIC_URL", default='/static/')
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+WHITENOISE_MANIFEST_STRICT = False
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'

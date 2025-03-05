@@ -16,8 +16,15 @@ class Tag(models.Model):
         verbose_name_plural = "Tags"
 
 
+def img_path_categories(instance, filename):
+    path = "categories/"
+    path += instance.name + "/"
+    return os.path.join(path, filename)
+
+
 class Category(models.Model):
     name = models.CharField(max_length=100)
+    image = models.ImageField("Photo du produit", upload_to=img_path_categories)
 
     class Meta:
         verbose_name = "Categorie"
@@ -25,6 +32,13 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def visuel(self):
+        if self.image.url :
+            return mark_safe('<img src="{}" alt="{}" width="100" />'.format(self.image.url, self.name))
+        return mark_safe('<img src="{}" alt="{}" width="100" />'.format("/static/images/placeholder.png", self.name))
+
+    visuel.allow_tags = True
 
 
 class Marque(models.Model):
@@ -40,13 +54,13 @@ class Marque(models.Model):
 
 class Product(models.Model):
     name = models.CharField("Nom du produit", max_length=255)
-    slug = models.SlugField("Slug", max_length=255)
+    slug = models.SlugField("Slug", max_length=255, unique=True)
     price = models.IntegerField("Prix", default=0)
-    category = models.ForeignKey(Category, verbose_name="Catégorie", on_delete=models.CASCADE, blank=True, null=True)
-    tag = models.ManyToManyField(Tag, verbose_name="Tag", related_name="products", blank=True)
-    marque = models.ForeignKey(Marque, on_delete=models.CASCADE, blank=True, null=True)
+    category = models.ForeignKey(Category, verbose_name="Catégorie", on_delete=models.DO_NOTHING, blank=True, null=True)
+    tag = models.ManyToManyField(Tag, verbose_name="Tag", related_name="products", blank=True, through='ProductTag')
+    marque = models.ForeignKey(Marque, blank=True, null=True, on_delete=models.DO_NOTHING)
     stock = models.IntegerField("Quantité en stock", default=0)
-    description = RichTextField(verbose_name="Description", blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
 
     class Meta:
         verbose_name = "Produit"
@@ -79,15 +93,25 @@ class Product(models.Model):
     visuel.allow_tags = True
 
 
+class ProductTag(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
+    tag = models.ForeignKey(Tag, on_delete=models.DO_NOTHING)
+
+    class Meta:
+        unique_together = ('product', 'tag')  # Éviter les doublons
+        verbose_name = "Relation Produit-Tag"
+        verbose_name_plural = "Relations Produit-Tag"
+
+    def __str__(self):
+        return f"{self.product.name} - {self.tag.name}"
+
+
 def img_path_products(instance, filename):
     path = "products/"
-    ext = filename.split('.')[-1] # Extension du fichier (Sera convertis vers un type défini si nécessaire)
+    path += instance.produit.name + "/"
     
-    # Les images des produits seront classées dans un répertoire portant le 
-    # nom du produit et ce répertoire sera dans le répertoire de associé
-    # à sa catégorie
     if instance.produit.category:
-        path += instance.produit.name + "/"
+        path += instance.produit.category.name + "/"
     return os.path.join(path, filename)
 
 

@@ -13996,10 +13996,10 @@ blockquote .text {
   margin-bottom: 10px;
   position: relative;
 }
-.form-checkout label::after {
+label.isrequired::after {
   content: "*";
   position: absolute;
-  color: var(--primary);
+  color: red;
 }
 .form-checkout .tf-select {
   height: 50px;

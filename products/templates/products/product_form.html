@@ -1,4 +1,6 @@
 {% load static %}
+<link rel="stylesheet" href="{% static 'lib/multi/multi.min.css' %}">
+<script src="{% static 'lib/multi/multi.min.js' %} "></script>
 <div class="modal-content">
     <div class="header">
         <div class="demo-title">Ajouter un produit</div>
@@ -6,19 +8,58 @@
     </div>
     <div class="modal-body">
         <div id="messages"></div>
-        <form id="product-form" method="post" action="{% url 'products:product_add' %}" enctype="multipart/form-data">
+        <form id="product-form" method="post" action="{% url 'products:product_add' %}" enctype="multipart/form-data" class="form-checkout">
             {% csrf_token %}
-
             <fieldset class="border p-3 mb-3">
-                {{ form.as_p }}
+                <div class="box grid-2">
+                    <fieldset class="box fieldset">
+                        <label for="{{form.name.id_for_label}}" class="isrequired">{{ form.name.label }}</label>
+                        {{ form.name }}
+                    </fieldset>
+                    <fieldset class="box fieldset">
+                        <label for="{{form.slug.id_for_label}}" class="isrequired">{{ form.slug.label }}</label>
+                        {{ form.slug }}
+                    </fieldset>
+                </div>
+                <div class="box grid-2">
+                    <fieldset class="box fieldset">
+                        <label for="{{form.category.id_for_label}}" class="isrequired">{{ form.category.label }}</label>
+                        {{ form.category }}
+                    </fieldset>
+                    <fieldset class="box fieldset">
+                        <label for="{{form.marque.id_for_label}}">{{ form.marque.label }}</label>
+                        {{ form.marque }}
+                    </fieldset>
+                </div>
+                <div class="box grid-2">
+                    <fieldset class="box fieldset">
+                        <label for="{{form.price.id_for_label}}" class="isrequired">{{ form.price.label }}</label>
+                        {{ form.price }}
+                    </fieldset>
+                    <fieldset class="box fieldset">
+                        <label for="{{form.stock.id_for _label}}"
+                        0+ >{{ form.stock.label }}</label>
+                        {{ form.stock }}
+                    </fieldset>
+                </div>
+                <div class="box grid-2">
+                    <fieldset class="box fieldset">
+                        <label for="{{form.tag.id_for_label}}">{{ form.tag.label }}</label>
+                        {{ form.tag }}
+                    </fieldset>
+                    <fieldset class="box fieldset">
+                        <label for="{{form.description.id_for_label}}">{{ form.description.label }}</label>
+                        {{ form.description }}
+                    </fieldset>
+                </div>
             </fieldset>
 
             <fieldset class="border p-3 mb-3">
                 <div class="upload__box">
                     <div class="upload__btn-box">
                         <label class="upload__btn">
-                        <p>Images du produit</p>
-                        <input type="file" multiple="" data-max_length="20" class="upload__inputfile">
+                            <p>Images du produit</p>
+                            <input type="file" name="images" multiple="" data-max_length="20" class="upload__inputfile">
                         </label>
                     </div>
                     <div class="upload__img-wrap"></div>
@@ -27,70 +68,12 @@
         </form>
     </div>
     <div class="modal-footer">
-        <button type="submit" class="btn btn-success custom-btn-green">Enregistrer</button>
+        <button type="submit" class="btn btn-success custom-btn-green" form="product-form">Enregistrer</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
     </div>
 </div>
 
 <script>
-    jQuery(document).ready(function () {
-        ImgUpload();
-    });
     
-    function ImgUpload() {
-        var imgWrap = "";
-        var imgArray = [];
-        
-        $('.upload__inputfile').each(function () {
-            $(this).on('change', function (e) {
-                imgWrap = $(this).closest('.upload__box').find('.upload__img-wrap');
-                var maxLength = $(this).attr('data-max_length');
-            
-                var files = e.target.files;
-                var filesArr = Array.prototype.slice.call(files);
-                var iterator = 0;
-                filesArr.forEach(function (f, index) {
-            
-                    if (!f.type.match('image.*')) {
-                        return;
-                    }
-            
-                    if (imgArray.length > maxLength) {
-                        return false
-                    } else {
-                        var len = 0;
-                        for (var i = 0; i < imgArray.length; i++) {
-                            if (imgArray[i] !== undefined) {
-                            len++;
-                            }
-                        }
-                        if (len > maxLength) {
-                            return false;
-                        } else {
-                            imgArray.push(f);
-                
-                            var reader = new FileReader();
-                            reader.onload = function (e) {
-                            var html = "<div class='upload__img-box'><div style='background-image: url(" + e.target.result + ")' data-number='" + $(".upload__img-close").length + "' data-file='" + f.name + "' class='img-bg'><div class='upload__img-close'></div></div></div>";
-                            imgWrap.append(html);
-                            iterator++;
-                            }
-                            reader.readAsDataURL(f);
-                        }
-                    }
-                });
-            });
-        });
-        
-        $('body').on('click', ".upload__img-close", function (e) {
-            var file = $(this).parent().data("file");
-            for (var i = 0; i < imgArray.length; i++) {
-                if (imgArray[i].name === file) {
-                    imgArray.splice(i, 1);
-                    break;
-                }
-            }
-            $(this).parent().parent().remove();
-        });
-    }
 </script>
+<script src="{% static 'lib/multi/multi.min.js' %} "></script>

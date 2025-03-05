@@ -13,7 +13,11 @@ urlpatterns = [
     path('orders/', include('orders.urls', namespace="orders")),
     path('store/', include('store.urls', namespace="store")),
 
+    path('contact', TemplateView.as_view(template_name='contact.html'), name="contact"),
+    path('faq/', TemplateView.as_view(template_name='faq.html'), name="faq"),
+    
     path('admin/', admin.site.urls),
+    path('ckeditor/', include('ckeditor_uploader.urls')),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

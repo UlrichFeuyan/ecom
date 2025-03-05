@@ -22,5 +22,6 @@ urlpatterns = [
     path('update/<str:slug>/', product_update, name="update"),
     path('delete/<str:slug>/', product_delete, name="delete"),
     path('manage/products', products, name='products'),
+    path('check-slug/', check_slug, name='check_slug'),
 ]
 
