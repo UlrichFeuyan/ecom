@@ -1,30 +1,22 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from products.views import *
+from backoffice.views import *
 from django.views.generic import TemplateView
 
 router = DefaultRouter()
 router.register(r'products', ProductViewSet, basename='products_api')
 
 
-app_name = 'products'
+app_name = 'backoffice'
 urlpatterns = [
-    path('list/', product_list, name='list'),
-    path('detail/<str:slug>/', product_detail, name="detail"),
-    path('search/', product_search, name="search"),
-    path('instant_search_suggests/', instant_search_suggests, name="instant_search_suggests"),
-    path('filter/', product_filter, name='filter'),
-    
-    # gestion des produits
+    path('api/', include(router.urls)),
     path('get_add_product_form/', get_add_product_form, name="get_add_product_form"),
     path('get_view_product/<str:slug>/', get_view_product, name="get_view_product"),
     path('get_edit_product_form/<str:slug>/', get_edit_product_form, name="get_edit_product_form"),
     path('get_delete_product_form/<str:slug>/', get_delete_product_form, name="get_delete_product_form"),
-    
     path('product_add/', product_add, name="product_add"),
-    path('product_update/<str:slug>/', product_update, name="product_update"),
-    path('product_delete/<str:slug>/', product_delete, name="product_delete"),
-    path('manage/products', products, name='products'),
-    path('check-slug/', check_slug, name='check_slug'),
+    path('view/<str:slug>/', product_view, name="update"),
+    path('update/<str:slug>/', product_update, name="update"),
+    path('delete/<str:slug>/', product_delete, name="delete"),
+    path('products', products, name='products'),
 ]
-

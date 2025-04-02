@@ -1,11 +1,8 @@
-from django.forms import CharField, ClearableFileInput, FileField, FileInput, ModelForm, DateInput, ModelMultipleChoiceField, NumberInput, Select, SelectMultiple, TextInput, Textarea, inlineformset_factory, modelformset_factory
-from django.contrib.admin.widgets import RelatedFieldWidgetWrapper, AdminFileWidget
+from django.forms import CharField, FileInput, ModelForm, ModelMultipleChoiceField, NumberInput, Select, SelectMultiple, TextInput, Textarea, modelformset_factory
 from products.models import ProductImage, Product, Marque, Category, Tag
 from django.utils.translation import gettext_lazy as _
-from ckeditor.fields import RichTextFormField
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from django.urls import reverse
-from datetime import datetime
 
 
 class CategoryForm(ModelForm):
@@ -58,6 +55,7 @@ class ProductForm(ModelForm):
             'category': Select(attrs={'class': 'tf-select w-100'}),
             'marque': Select(attrs={'class': 'tf-select w-100'}),
             'stock': NumberInput(attrs={'class': 'tf-field-input tf-input', 'min': 0}),
+            'description': Textarea(),
         }
 
 

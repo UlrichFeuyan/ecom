@@ -19566,6 +19566,7 @@ label.isrequired::after {
 }
 
 /* Définir la taille max de la modal */
+#edit_product .modal-dialog,
 #add_product .modal-dialog {
   max-width: min(1146px, 90vw);
   max-height: 90vh; /* Hauteur max pour éviter que la modal prenne tout l'écran */
@@ -19573,6 +19574,7 @@ label.isrequired::after {
 }
 
 /* Permet de scroller uniquement à l'intérieur du contenu */
+#edit_product .modal-content,
 #add_product .modal-content {
   display: flex;
   flex-direction: column;
@@ -19580,6 +19582,7 @@ label.isrequired::after {
 }
 
 /* Permet de fixer le header en haut */
+#edit_product .modal-content .header,
 #add_product .modal-content .header {
   flex-shrink: 0;
   padding: 10px;
@@ -19588,6 +19591,7 @@ label.isrequired::after {
 }
 
 /* Permet le scroll du formulaire */
+#edit_product .modal-body,
 #add_product .modal-body {
   flex-grow: 1; /* Prend tout l'espace restant */
   overflow-y: auto;
@@ -19596,6 +19600,7 @@ label.isrequired::after {
 }
 
 /* Fixe le footer en bas */
+#edit_product .modal-footer,
 #add_product .modal-footer {
   flex-shrink: 0;
   background: white;

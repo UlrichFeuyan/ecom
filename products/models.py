@@ -87,6 +87,9 @@ class Product(models.Model):
         except IndexError:
             return None
         
+    def get_all_tags(self):
+        return Tag.objects.filter(produit=self)
+        
     def visuel(self):
         return mark_safe('<img src="{}" alt="{}" width="100" />'.format(self.get_first_image().thumbnail.url, self.name))
 

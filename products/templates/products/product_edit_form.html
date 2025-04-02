@@ -1,0 +1,87 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'lib/multi/multi.min.css' %}">
+<link href="{% static 'css/MultiSelect.css' %}" rel="stylesheet" type="text/css">
+<script src="{% static 'lib/multi/multi.min.js' %} "></script>
+
+<div class="modal-content">
+    <div class="header">
+        <div class="demo-title">Modifier produit</div>
+        <span class="icon-close icon-close-popup" data-bs-dismiss="modal"></span>
+    </div>
+    <div class="modal-body">
+        <div id="messages"></div>
+        <form id="product-form" method="post" action="{% url 'products:product_update' slug=product.slug %}" enctype="multipart/form-data" class="form-checkout">
+            {% csrf_token %}
+            <fieldset class="border p-3 mb-3">
+                <div class="box grid-2">
+                    <fieldset class="box fieldset">
+                        <label for="id_name" class="isrequired">Nom du produit</label>
+                        <input type="text" name="name" class="tf-field-input tf-input" maxlength="255" required="" id="id_name">
+                    </fieldset>
+                    <fieldset class="box fieldset">
+                        <label for="id_slug" class="isrequired">Slug</label>
+                        <input type="text" name="slug" class="tf-field-input tf-input" required="" maxlength="255" id="id_slug">
+                    </fieldset>
+                </div>
+                <div class="box grid-2">
+                    <fieldset class="box fieldset">
+                        <label for="id_category" class="isrequired">Catégorie </label>
+                        <select name="category" class="tf-select w-100" id="id_category">
+
+                        </select>
+                    </fieldset>
+                    <fieldset class="box fieldset">
+                        <label for="id_marque"> Marque</label>
+                        <select name="marque" class="tf-select w-100" id="id_marque"></select>
+                    </fieldset>
+                </div>
+                <div class="box grid-2">
+                    <fieldset class="box fieldset">
+                        <label for="id_price" class="isrequired">Prix</label>
+                        <input type="number" name="price" value="0" class="tf-field-input tf-input" min="0" required="" id="id_price">
+                    </fieldset>
+                    <fieldset class="box fieldset">
+                        <label for="id_stock">Quantité en stock</label>
+                        <input type="number" name="stock" value="0" class="tf-field-input tf-input" min="0" required="" id="id_stock">
+                    </fieldset>
+                </div>
+                <div class="box grid-2">
+                    <fieldset class="box fieldset">
+                        <label for="tag">Tags</label>
+                        <select name="id_tag" id="id_tag" multiple>
+                            {% for tag in Tags %}
+                                <option value="{{ tag.name }}">{{ tag.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </fieldset>
+                    <fieldset class="box fieldset">
+                        <label for="id_description">Description</label>
+                        <textarea name="description" id="id_description"></textarea>
+                    </fieldset>
+                </div>
+            </fieldset>
+
+            <fieldset class="border p-3 mb-3">
+                <div class="upload__box">
+                    <div class="upload__btn-box">
+                        <label class="upload__btn">
+                            <p>Images du produit</p>
+                            <input type="file" name="images" multiple="" data-max_length="20" class="upload__inputfile">
+                        </label>
+                    </div>
+                    <div class="upload__img-wrap"></div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-success custom-btn-green" form="product-form">Enregistrer</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+    </div>
+</div>
+
+<script>
+    
+</script>
+<script src="{% static 'lib/multi/multi.min.js' %} "></script>
+<script src="{% static 'js/MultiSelect.js' %} "></script>
