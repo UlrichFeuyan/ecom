@@ -89,7 +89,8 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
 
     # couche d'orchestration
-    'store.apps.StoreConfig', #
+    'backoffice.apps.BackofficeConfig', #
+    'store.apps.StoreConfig',
 ]
 
 MIDDLEWARE = [

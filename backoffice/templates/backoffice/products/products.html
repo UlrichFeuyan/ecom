@@ -1,0 +1,489 @@
+{% extends 'gestion_base.html' %}
+{% load static %}
+
+{% block css_perso %}
+    <link rel="stylesheet" href="{% static 'lib/multi/multi.min.css' %}">
+    <link href="{% static 'css/MultiSelect.css' %}" rel="stylesheet" type="text/css">    
+    <style>
+        select[multiple] {
+            display: none !important; /* Masque le select natif */
+        }
+        html * {
+            box-sizing: border-box;
+        }
+        
+        p {
+            margin: 0;
+        }
+        
+        /* Upload box */
+        .upload__box {
+            padding: 40px;
+        }
+        
+        /* Input file caché */
+        .upload__inputfile {
+            width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            overflow: hidden;
+            position: absolute;
+            z-index: -1;
+        }
+        
+        /* Bouton d'upload */
+        .upload__btn {
+            display: inline-block;
+            font-weight: 600;
+            color: #fff;
+            text-align: center;
+            min-width: 116px;
+            padding: 5px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid #61b482;
+            background-color: #61b482;
+            border-radius: 10px;
+            line-height: 1px;
+            font-size: 14px;
+        }
+        
+        /* Effet au survol */
+        .upload__btn:hover {
+            background-color: #4fa06d;
+            border-color: #4fa06d;
+            transition: all 0.3s ease;
+        }
+        
+        /* Espace autour du bouton */
+        .upload__btn-box {
+            margin-bottom: 10px;
+        }
+        
+        /* Conteneur d'images */
+        .upload__img-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -10px;
+        }
+        
+        /* Image box */
+        .upload__img-box {
+            width: 200px;
+            padding: 0 10px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+        
+        /* Bouton de suppression */
+        .upload__img-close {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.5);
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            text-align: center;
+            line-height: 24px;
+            z-index: 1;
+            cursor: pointer;
+        }
+        
+        /* Icône de suppression */
+        .upload__img-close::after {
+            content: '\2716'; /* Symbole X */
+            font-size: 14px;
+            color: white;
+        }
+        
+        /* Image d'upload */
+        .img-bg {
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            position: relative;
+            padding-bottom: 100%;
+        }         
+    </style>
+{% endblock css_perso %}
+
+{% block products_base_content %}
+    <style>
+        #productsTable {
+            font-size: 16px; /* Ajuste la taille des caractères */
+        }
+        #productsTable th, #productsTable td {
+            padding: 12px; /* Ajuste l'espacement */
+        }
+        /* Empêcher le retour à la ligne pour la colonne "Nom du produit" */
+        table.dataTable thead th:nth-child(7),
+        /* Empêcher le retour à la ligne pour la colonne "Tags" */
+        table.dataTable tbody td:nth-child(8) {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px; /* Ajuste selon tes besoins */
+        }
+    </style>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <div class="row">
+                <div class="col-9">
+                    <h6 class="m-0 font-weight-bold text">Liste des produits</h6>
+                </div>
+                <div class="col-3">
+                    <div class="row">
+                        <div class="col-11">
+                            <div class="row">
+                                <a class="btn btn-success btn-sm custom-btn-green" id="bouton_ajout_produit" href="#add_product" hx-get="{% url 'products:get_add_product_form' %}" hx-target="#dialog_add_product" data-bs-toggle="modal"><i class="icon icon-add"></i>Ajouter</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid px-4 mt-4">
+            <div class="row">
+                <div class="col-9">
+                    <form method="GET">
+                        {% csrf_token %}
+                        <div class="select-custom">
+                            Afficher
+                            <select class="tf-select" id="table_size" name="table_size">
+                                <option value="5">05</option>
+                                <option value="10">10</option>
+                                <option value="25">25</option>
+                                <option value="-1">tous les</option>
+                            </select>
+                            élément(s)
+                        </div>
+                    </form>
+                </div>
+                <div class="col-3">
+                    <div class="tf-form-search">
+                        <form method="GET" class="tf-mini-search-frm">
+                            {% csrf_token %}
+                            <fieldset class="text">
+                                <input type="text" placeholder="Recherche" class="w-100" name="search_text" tabindex="0" value="{% if search_text %}{{ search_text }}{% endif %}">
+                            </fieldset>
+                            <button class="" type="submit"><i class="icon-search"></i></button>
+                        </form>
+                    </div>        
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <table id="" class="table table-striped table-bordered center">
+                <thead>
+                    <tr>
+                        <th class="" style="text-align: center;">Visuel</th>
+                        <th class="" style="text-align: center;">Nom du produit</th>
+                        <th class="" style="text-align: center;">Catégorie</th>
+                        <th class="" style="text-align: center;">Marque</th>
+                        <th class="" style="text-align: center;">Tags</th>
+                        <th class="" style="text-align: center;">Prix</th>
+                        <th class="" style="text-align: center;">En stock</th>
+                        <th class="" style="text-align: center;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in page %}
+                        <tr style="text-align: center;">
+                            <td class="align-middle">
+                                {% if product.get_first_image.thumbnail.url %}
+                                    <img src="{{ product.get_first_image.thumbnail.url }}" alt="{{ product.name }}" width="150">
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="align-middle">
+                                {% if product.name %}
+                                    {{ product.name }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="align-middle">
+                                {% if product.category %}
+                                    {{ product.category }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="align-middle">
+                                {% if product.marque %}
+                                    {{ product.marque }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="align-middle">
+                                {% if product.producttag %}
+                                    {% for tag in product.producttag %}
+                                        {% if not forloop.last %}
+                                            {{ tag.name }}, 
+                                        {% else %}
+                                            {{ tag.name }}.
+                                        {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="align-middle">
+                                {% if product.price %}
+                                    {{ product.price }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="align-middle">
+                                {% if product.stock %}
+                                    {{ product.stock }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="align-middle">
+                                <a class="d-inline-block mx-2" href="#view_product" hx-get="{% url 'products:get_view_product' slug=product.slug %}" hx-target="#dialog_view_product" data-bs-toggle="modal"><i class="icon icon-view"></i></a>
+                                <a class="d-inline-block mx-2" href="#edit_product" hx-get="{% url 'products:get_edit_product_form' slug=product.slug %}" hx-target="#dialog_edit_product" data-bs-toggle="modal"><i class="icon icon-edit"></i></a>
+                                <a class="d-inline-block mx-2" href="#delete_product" hx-get="{% url 'products:get_delete_product_form' slug=product.slug %}" hx-target="#dialog_delete_product" data-bs-toggle="modal"><i class="icon icon-delete"></i></a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        </tr style="text-align: center;">
+                            <td class="align-middle" colspan="8">
+                                <p style="text-align: center;">Aucun élément trouvé.</p>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col">
+                <p>
+                    <!-- pagination -->
+                    {% if page %}
+                        <ul class="tf-pagination-wrap tf-pagination-list tf-pagination-btn pb-3" style="margin: 0px;padding: 0px;">
+                            <!-- Lien vers la première page -->
+                            {% if page.has_previous %}
+                                <li>
+                                    <a href="?page=1" class="pagination-link animate-hover-btn">1</a>
+                                </li>
+                            {% endif %}
+
+                            <!-- Lien vers la page précédente -->
+                            {% if page.has_previous %}
+                                <li>
+                                    <a href="?page={{ page.previous_page_number }}" class="pagination-link animate-hover-btn">
+                                        <span class="icon icon-arrow-left"></span>
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            <!-- Page actuelle -->
+                            <li class="active">
+                                <a href="#" class="pagination-link">{{ page.number }}</a>
+                            </li>
+
+                            <!-- Lien vers la page suivante -->
+                            {% if page.has_next %}
+                                <li>
+                                    <a href="?page={{ page.next_page_number }}" class="pagination-link animate-hover-btn">
+                                        <span class="icon icon-arrow-right"></span>
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            <!-- Lien vers la dernière page -->
+                            {% if page.has_next %}
+                                <li>
+                                    <a href="?page={{ page.paginator.num_pages }}" class="pagination-link animate-hover-btn">
+                                        {{ page.paginator.num_pages }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock products_base_content %}
+
+{% block modal_perso %}
+    <!-- modal add product -->
+    <div class="modal fade modalDemo tf-product-modal" id="add_product">
+        <div class="modal-dialog modal-dialog-centered" id="dialog_add_product">
+            <div class="modal-content">
+                <div class="header">
+                    <div class="demo-title">Ajouter un produit</div>
+                    <span class="icon-close icon-close-popup" data-bs-dismiss="modal"></span>
+                </div>
+                <div class="modal-body">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /modal add product -->
+
+    <!-- modal edit product -->
+    <div class="modal fade modalDemo tf-product-modal" id="edit_product">
+        <div class="modal-dialog modal-dialog-centered" id="dialog_edit_product">
+            <div class="modal-content">
+                <div class="header">
+                    <div class="demo-title">Modifier produit</div>
+                    <span class="icon-close icon-close-popup" data-bs-dismiss="modal"></span>
+                </div>
+                <div class="modal-body">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /modal add product -->
+
+    <!-- modal view product -->
+    <div class="modal fade modalDemo tf-product-modal" id="view_product">
+        <div class="modal-dialog modal-dialog-centered" id="dialog_view_product">
+            <div class="modal-content">
+                <div class="header">
+                    <div class="demo-title">Aperçu  produit</div>
+                    <span class="icon-close icon-close-popup" data-bs-dismiss="modal"></span>
+                </div>
+                <div class="modal-body">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /modal add product -->
+
+    <!-- modal view product -->
+    <div class="modal fade modalDemo tf-product-modal" id="delete_product">
+        <div class="modal-dialog modal-dialog-centered" id="dialog_delete_product">
+            <div class="modal-content">
+                <div class="header">
+                    <div class="demo-title">Supprimer produit</div>
+                    <span class="icon-close icon-close-popup" data-bs-dismiss="modal"></span>
+                </div>
+                <div class="modal-body">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /modal add product -->
+{% endblock modal_perso %}
+
+{% block js_perso %}
+    <script src="{% static 'js/upload_images.js' %}"></script>
+    <script src="{% static 'lib/multi/multi.min.js' %} "></script>
+    <script src="{% static 'js/MultiSelect.js' %} "></script>
+    <script>
+        document.body.addEventListener('htmx:afterSwap', function(event) {
+            if (event.target.id === "dialog_add_product" || event.target.id === "dialog_edit_product") {  // Vérifie que c'est bien la modal qui est mise à jour
+                console.log("Modal injectée, activation du slug auto");
+        
+                let nameInput = document.getElementById("id_name");
+                let slugInput = document.getElementById("id_slug");
+        
+                if (!nameInput || !slugInput) {
+                    console.error("Champs name/slug introuvables !");
+                    return;
+                }
+        
+                // Empêcher les doublons en supprimant d'abord l'ancien event listener
+                nameInput.removeEventListener("input", updateSlug);
+                nameInput.addEventListener("input", updateSlug);
+            }
+        });
+        
+        // Fonction de génération du slug
+        function updateSlug() {
+            let nameInput = document.getElementById("id_name");
+            let slugInput = document.getElementById("id_slug");
+        
+            function slugify(text) {
+                return text.toString().toLowerCase()
+                    .trim()
+                    .replace(/\s+/g, '-')           
+                    .replace(/[^\w\-]+/g, '')        
+                    .replace(/\-\-+/g, '-')         
+                    .replace(/^-+/, '')             
+                    .replace(/-+$/, '');            
+            }
+        
+            let slug = slugify(nameInput.value);
+            slugInput.value = slug;
+        
+            // Vérification du slug côté serveur
+            if (slug) {
+                fetch(`/products/check-slug/?name=${encodeURIComponent(nameInput.value)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        slugInput.value = data.slug;
+                    });
+            }
+        }
+
+        document.body.addEventListener('htmx:afterSwap', function(event) {
+            if (event.target.id === "dialog_add_product" || event.target.id === "dialog_edit_product") {
+                console.log("Initialisation du multi-select");
+        
+                let select = document.getElementById("id_tag");
+        
+                // Vérifie si le multi-select a déjà été initialisé
+                if (select.dataset.multiInitialized) {
+                    console.log("Réinitialisation du multi-select...");
+                    
+                    // Supprimer le multi-select existant (le conteneur stylisé)
+                    let multiContainer = select.closest('.multi-wrapper');
+                    if (multiContainer) {
+                        multiContainer.remove(); 
+                    }
+        
+                    // Supprime tous les events liés à l'ancien select
+                    select.outerHTML = select.outerHTML;
+                    select = document.getElementById("id_tag"); // Reprendre la nouvelle instance DOM
+                }
+        
+                // Appliquer le multi-select
+                multi(select, {
+                    non_selected_header: "Disponibles",
+                    search_placeholder: "Rechercher un tag ...",
+                    selected_header: "Sélectionnés",
+                    limit: 5,
+                    limit_reached: function () {
+                        alert('Vous avez sélectionné 5/5 éléments.');
+                    }
+                });
+        
+                // Marquer comme initialisé
+                select.dataset.multiInitialized = true;
+            }
+        });
+        
+        
+        document.body.addEventListener('hidden.bs.modal', function(event) {
+            if (event.target.id === "add_product" || event.target.id === "edit_product") {
+                console.log("Nettoyage des événements à la fermeture de la modal");
+        
+                let nameInput = document.getElementById("id_name");
+                if (nameInput) {
+                    nameInput.removeEventListener("input", updateSlug);
+                }
+        
+                let select = document.getElementById("id_tag");
+                if (select) {
+                    delete select.dataset.multiInitialized;  // Réinitialise le flag d'initialisation
+                }
+            }
+        });
+        
+    </script>
+{% endblock js_perso %}

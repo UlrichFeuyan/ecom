@@ -18,16 +18,11 @@
     <link rel="stylesheet" href="{% static 'css/swiper-bundle.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/animate.css' %}">
     <link rel="stylesheet"type="text/css" href="{% static 'css/styles.css' %}"/>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     
     <!-- Favicon and Touch Icons  -->
     <link rel="shortcut icon" href="{% static 'images/logo/favicon.png' %}">
     <link rel="apple-touch-icon-precomposed" href="{% static 'images/logo/favicon.png' %}">
-    
-    <!-- Datatables  -->
-    <link href="{% static 'lib/datatables/datatables.min.css' %}" rel="stylesheet">
-    
-    
+
     {% block css_perso %}
     
     {% endblock css_perso %}
@@ -1882,13 +1877,6 @@
         <script src="{% static 'js/cart.js' %}"></script>
         
         {% block js_perso %}
-        
-        <script>
-            $(document).ready( function () {
-                $('#myTable').DataTable();
-            } );
-        </script>
-        
         {% endblock js_perso %}
         
         

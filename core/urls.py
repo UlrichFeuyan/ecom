@@ -12,6 +12,8 @@ urlpatterns = [
     path('products/', include('products.urls', namespace="products")),
     path('orders/', include('orders.urls', namespace="orders")),
     path('store/', include('store.urls', namespace="store")),
+    
+    path('backoffice/', include('backoffice.urls', namespace="backoffice")),
 
     path('contact', TemplateView.as_view(template_name='contact.html'), name="contact"),
     path('faq/', TemplateView.as_view(template_name='faq.html'), name="faq"),

@@ -1,0 +1,78 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'lib/multi/multi.min.css' %}">
+<script src="{% static 'lib/multi/multi.min.js' %} "></script>
+<div class="modal-content">
+    <div class="header">
+        <div class="demo-title">Ajouter un produit</div>
+        <span class="icon-close icon-close-popup" data-bs-dismiss="modal"></span>
+    </div>
+    <div class="modal-body">
+        <div id="messages"></div>
+        <form id="product-form" method="post" action="{% url 'products:product_add' %}" enctype="multipart/form-data" class="form-checkout">
+            {% csrf_token %}
+            <fieldset class="border p-3 mb-3">
+                <div class="box grid-2">
+                    <fieldset class="box fieldset">
+                        <label for="{{form.name.id_for_label}}" class="isrequired">{{ form.name.label }}</label>
+                        {{ form.name }}
+                    </fieldset>
+                    <fieldset class="box fieldset">
+                        <label for="{{form.slug.id_for_label}}" class="isrequired">{{ form.slug.label }}</label>
+                        {{ form.slug }}
+                    </fieldset>
+                </div>
+                <div class="box grid-2">
+                    <fieldset class="box fieldset">
+                        <label for="{{form.category.id_for_label}}" class="isrequired">{{ form.category.label }}</label>
+                        {{ form.category }}
+                    </fieldset>
+                    <fieldset class="box fieldset">
+                        <label for="{{form.marque.id_for_label}}">{{ form.marque.label }}</label>
+                        {{ form.marque }}
+                    </fieldset>
+                </div>
+                <div class="box grid-2">
+                    <fieldset class="box fieldset">
+                        <label for="{{form.price.id_for_label}}" class="isrequired">{{ form.price.label }}</label>
+                        {{ form.price }}
+                    </fieldset>
+                    <fieldset class="box fieldset">
+                        <label for="{{form.stock.id_for_label}}">{{ form.stock.label }}</label>
+                        {{ form.stock }}
+                    </fieldset>
+                </div>
+                <div class="box grid-2">
+                    <fieldset class="box fieldset">
+                        <label for="{{form.tag.id_for_label}}">{{ form.tag.label }}</label>
+                        {{ form.tag }}
+                    </fieldset>
+                    <fieldset class="box fieldset">
+                        <label for="{{form.description.id_for_label}}">{{ form.description.label }}</label>
+                        {{ form.description }}
+                    </fieldset>
+                </div>
+            </fieldset>
+
+            <fieldset class="border p-3 mb-3">
+                <div class="upload__box">
+                    <div class="upload__btn-box">
+                        <label class="upload__btn">
+                            <p>Images du produit</p>
+                            <input type="file" name="images" multiple="" data-max_length="20" class="upload__inputfile">
+                        </label>
+                    </div>
+                    <div class="upload__img-wrap"></div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-success custom-btn-green" form="product-form">Enregistrer</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+    </div>
+</div>
+
+<script>
+    
+</script>
+<script src="{% static 'lib/multi/multi.min.js' %} "></script>

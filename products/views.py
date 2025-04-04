@@ -5,7 +5,7 @@ from rest_framework_datatables.pagination import *
 from products.pagination import CustomDatatablesPagination
 from products.serializers import ProductSerializer
 from products.forms import ProductForm
-from products.models import Category, Product, ProductImage, Tag
+from products.models import Category, Marque, Product, ProductImage, Tag
 from rest_framework import viewsets
 from django.contrib import messages
 from django.db import transaction
@@ -99,6 +99,8 @@ def get_view_product(request, slug):
 def get_edit_product_form(request, slug):
     product = get_object_or_404(Product, slug=slug)
     tags = Tag.objects.all()
+    categories = Category.objects.all()
+    marques = Marque.objects.all()
     return render(request, 'products/product_edit_form.html', locals())
 
 def get_delete_product_form(request, slug):

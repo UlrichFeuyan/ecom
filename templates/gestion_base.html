@@ -3,6 +3,67 @@
 
 {% block content %}
     <!-- page-cart -->
+    <style>
+        .widget-tab-4-perso{
+            padding: 0px 79px 0px 56px;
+        }
+
+        .widget-tab-4-perso {
+            border-radius: 10px;
+            gap: 20px;
+            padding: 20px 15px;
+            display: flex;
+          }
+          .widget-tab-4-perso .nav-tab-link {
+            display: block;
+            align-items: center;
+            gap: 10px;
+            padding: 5px 0px;
+            min-height: 30px;
+            -webkit-transition: all 0.3s ease;
+            -moz-transition: all 0.3s ease;
+            -ms-transition: all 0.3s ease;
+            -o-transition: all 0.3s ease;
+            transition: all 0.3s ease;
+            cursor: pointer;
+          }
+          .widget-tab-4-perso .nav-tab-link span {
+            font-size: 15px;
+            line-height: 18px;
+            font-weight: 500;
+            display: flex;
+            gap: 5px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            overflow: hidden;
+          }
+
+        .widget-tab-4-perso {
+            flex-direction: column;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            padding-left: 56px;
+            padding-right: 10px;
+            overflow-y: clip;
+            gap: 0;
+        }
+        .widget-tab-4-perso .nav-tab-item:not(:last-child) .nav-tab-link {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+        }
+        .widget-tab-4-perso .nav-tab-item .nav-tab-link {
+            justify-content: space-between;
+            padding: 15px 0px;
+        }
+        .widget-tab-4-perso .nav-tab-item .nav-tab-link.active {
+            border-color: var(--main);
+        }
+
+        .widget-tab-4-perso .nav-tab-item .nav-tab-link {
+            padding: 15px 0px;
+        }
+
+    </style>
     <section class="flat-spacing-11">
         <div class="container">
             <div class="row">
@@ -13,10 +74,20 @@
                                 <a href="#" class="my-account-nav-item {% if tableau_de_bord_active %}active{% endif %}">Tableau de bord</a>
                             </li>
                             <li>
-                                <a href="{% url 'products:products' %}" class="my-account-nav-item {% if produits_active %}active{% endif %}">Produits</a>
-                            </li>
-                            <li>
-                                <a href="#" class="my-account-nav-item {% if categories_active %}active{% endif %}">catégories</a>
+                                <div class="widget-facet mb-0">
+                                    <div class="facet-title my-account-nav-item collapsed" data-bs-target="#product" data-bs-toggle="collapse" aria-expanded="false" aria-controls="product">
+                                        <span>Produits</span>
+                                        <span class="icon icon-arrow-up"></span>
+                                    </div>
+                                    <div id="product" class="collapse {% if menu_product %}show{% endif %}">
+                                        <ul class="current-scrollbar widget-tab-4-perso rounded-0 scroll-snap">
+                                            <li class="nav-tab-item {% if list_products %}current{% endif %}"><a href="{% url 'backoffice:products' %}" class="nav-tab-link"><i class="icon icon-arrow-right"></i> Produits</a></li>
+                                            <li class="nav-tab-item {% if list_categories %}current{% endif %}"><a href="#" class="nav-tab-link"><i class="icon icon-arrow-right"></i> Catégories</a></li>
+                                            <li class="nav-tab-item {% if list_marques %}current{% endif %}"><a href="#" class="nav-tab-link"><i class="icon icon-arrow-right"></i> Marques</a></li>
+                                            <li class="nav-tab-item {% if list_tags %}current{% endif %}"><a href="#" class="nav-tab-link"><i class="icon icon-arrow-right"></i> Tags</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </li>
                             <li>
                                 <a href="#" class="my-account-nav-item {% if clients_active %}active{% endif %}">Clients</a>
